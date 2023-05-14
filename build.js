@@ -25,25 +25,33 @@ async function main () {
     external: ['socket:*']
   }
 
-  const watch = process.argv.find(s => s.includes('--watch='))
+  const watch = process.argv.find(s => s.includes('--watch'))
+  const serve = process.argv.find(s => s.includes('--serve'))
 
   //
   // The second argument to this program will be the target-OS specifc
   // directory for where to copy your build artifacts
   //
-  const target = path.resolve(process.argv[2])
+  let target = path.resolve(process.argv[2])
 
-  //
-  // If the watch command is specified, let esbuild start its server
-  //
-  if (watch) {
-    esbuild.serve({ servedir: path.resolve(watch.split('=')[1]) }, params)
+  let context
+  if (serve || watch) {
+    target = 'build/esbuild'
+    fs.promises.mkdir(target, {recursive: true})
+    context = await esbuild.context({...params, outdir: path.resolve(target) })
   }
 
-  //
-  //
-  //
-  if (!watch) {
+  let promises = []
+
+  if (serve) {
+    promises.push(context.serve({servedir: path.resolve(target)}))
+  }
+
+  if (watch) {
+    promises.push(context.watch())
+  }
+
+  if (!(watch || serve)) {
     await esbuild.build({
       ...params,
       outfile: path.join(target, 'index.js')
@@ -75,6 +83,8 @@ async function main () {
     cp('src/index.css', target),
     cp('src/icon.png', target)
   ])
+
+  Promise.all(promises)
 }
 
 main()
