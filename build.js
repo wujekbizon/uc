@@ -6,6 +6,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 import esbuild from 'esbuild'
+import {sassPlugin} from'esbuild-sass-plugin'
 
 const cp = async (a, b) => fs.promises.cp(
   path.resolve(a),
@@ -17,12 +18,21 @@ async function main () {
   const prod = process.argv.find(s => s.includes('--prod'))
 
   const params = {
-    entryPoints: ['src/index.jsx'],
+    entryPoints: ['src/App.scss', 'src/index.jsx'],
     format: 'esm',
     bundle: true,
+    loader: {
+      ".png": "dataurl",
+      ".woff": "dataurl",
+      ".woff2": "dataurl",
+      ".eot": "dataurl",
+      ".ttf": "dataurl",
+      ".svg": "dataurl",
+  },
     minify: !!prod,
     sourcemap: !prod,
-    external: ['socket:*']
+    external: ['socket:*'],
+    plugins: [sassPlugin()]
   }
 
   const watch = process.argv.find(s => s.includes('--watch'))
