@@ -237,21 +237,21 @@ const sscBuildOutput = async (dest) => {
 
 const checkRefresh = async () => {
   try {
-    if (await sscBuildOutput(_opts.startDir)) {
-      if (_opts.debounce > -1) {
-        clearTimeout(_debounce_handle)
-        // if debounce wait to update, other updates will reset update timeout
-        setTimeout(() => {_opts.updateCallback()}, _opts.debounce)
+    // if (await sscBuildOutput(_opts.startDir)) {
+    //   if (_opts.debounce > -1) {
+    //     clearTimeout(_debounce_handle)
+    //     // if debounce wait to update, other updates will reset update timeout
+    //     setTimeout(() => {_opts.updateCallback()}, _opts.debounce)
         
-        // Let consumer know that an update is coming
-        if (_opts.debounceCallback) {
-          _opts.debounceCallback();
-        }
-      } else {
-        await _opts.updateCallback()
-        application.backend.close()
-      }
-    }
+    //     // Let consumer know that an update is coming
+    //     if (_opts.debounceCallback) {
+    //       _opts.debounceCallback();
+    //     }
+    //   } else {
+    //     await _opts.updateCallback()
+    //     application.backend.close()
+    //   }
+    // }
   } catch (e) {
     console.log(e)
   }
