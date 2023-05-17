@@ -13,25 +13,39 @@
   src: url('./assets/fonts/CoolveticaRg-Regular.woff2') format('woff2');
 }
 
-
-.app {
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Coolvetica', sans-serif;
+  background-color: #546e7a;
   width: 100vw;
   height: 100vh;
-  background-color: rgb(32, 30, 49);
-  font-family: 'La Belle Aurore', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  color: #eeffff;
+}
 
-  .img-container {
-    width: 400px;
-    height: 400px;
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 
-    .image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
+body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background: rgba(29, 28, 37, 1) 0%;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(189.97deg, #ae67fa 1.84%, #f49867 102.67%);
+  border-radius: 20px;
+  border: 3px solid #30363d;
+}
+
+.files-viewer {
+  height: 80vh;
 }
