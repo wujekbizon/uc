@@ -1,11 +1,11 @@
 .commander {
-  height: 100%;
-  width: 100%;
+  height: calc(100vh - 5px);
+  width: calc(100% - 10px);
   margin-left: auto;
   margin-right: auto;
   max-width: 1360px;
   background-color: #0f111a;
-  border: 1px solid #090b10;
+  border: 1px solid #292d3e;
   display: flex;
   align-items: center;
   justify-content: center;

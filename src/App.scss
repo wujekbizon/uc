@@ -25,6 +25,18 @@ body {
   color: #eeffff;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
 ul {
   list-style: none;
   margin: 0;
@@ -44,8 +56,4 @@ body::-webkit-scrollbar-thumb {
   background: linear-gradient(189.97deg, #ae67fa 1.84%, #f49867 102.67%);
   border-radius: 20px;
   border: 3px solid #30363d;
-}
-
-.files-viewer {
-  height: 80vh;
 }

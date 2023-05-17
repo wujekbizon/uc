@@ -28,9 +28,11 @@ const CommandBar = () => {
             <span>S</span>tart
           </li>
         </ul>
-        <h4>
-          <span>H</span>elp
-        </h4>
+        <div>
+          <h4>
+            <span>H</span>elp
+          </h4>
+        </div>
       </div>
       <div></div>
     </section>
