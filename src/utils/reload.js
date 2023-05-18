@@ -160,7 +160,7 @@ const enableSocketReload = async (opts = {}) => {
       _interval = setInterval(checkRefresh, opts.scanInterval)
     }
 
-    // checkRefresh()
+    checkRefresh()
     enabled = true
   } else {
     clearInterval(_interval)
