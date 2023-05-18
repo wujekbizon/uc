@@ -10,7 +10,7 @@ const FileViewerBar = () => {
           <option value="d">d:</option>
           <option value="e">e:</option>
         </select>
-        <h4>[Drive_Name] 44 027 540 k of 249 160 552 k free</h4>
+        <h6>[Drive_Name] 44 027 540 k of 249 160 552 k free</h6>
       </div>
       <div className="btns-sort">
         <button>Name</button>
