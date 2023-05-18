@@ -17,7 +17,7 @@
     "esbuild": "^0.17.19"
   },
   "dependencies": {
-    "@socketsupply/socket": "^0.2.13",
+    "@socketsupply/socket": "^0.3.0",
     "esbuild-sass-plugin": "^2.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
