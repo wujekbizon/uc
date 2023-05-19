@@ -1,76 +1,39 @@
 import './FileViewer.scss'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FcFolder, FcFile } from 'react-icons/fc'
 import { ImArrowUp } from 'react-icons/im'
 
 // Components
 import { FileViewerBar } from './index'
+import FileViewerData from '../api/FileViewerData'
+import { FileViewerEntry } from './FileViewerEntry'
 
-const FileViewer = () => {
+// todo: This should be called DirectoryListViewer
+/**
+ * 
+ * @param {FileViewerData} data 
+ * @returns 
+ */
+const FileViewer = (props) => {
+
+  const [entries, setEntries] = useState([]);
+  entries.push('[..]')
+  let items = []
+
+  useEffect(() => {
+    props.data.refresh().then(() => {
+      entries.push(...props.data._entries)
+      setEntries(['..', ...entries])
+    })
+  }, [])
+
+  items = entries.map((entry, k) => (<FileViewerEntry key={k} entry={entry} />))
+
   return (
     <section className="file-viewer">
       <FileViewerBar />
       <div className="files-container">
-        <div className="file-container">
-          <ImArrowUp /> [..]
-        </div>
-        <div className="file-container">
-          <FcFolder /> [FolderName]
-        </div>
-        <div className="file-container">
-          <FcFolder /> [FolderName]
-        </div>
-        <div className="file-container">
-          <FcFolder /> [FolderName]
-        </div>
-        <div className="file-container">
-          <FcFolder /> [FolderName]
-        </div>
-        <div className="file-container">
-          <FcFolder /> [FolderName]
-        </div>
-        <div className="file-container">
-          <FcFolder /> [FolderName]
-        </div>
-        <div className="file-container">
-          <FcFolder /> [FolderName]
-        </div>
-        <div className="file-container">
-          <FcFolder /> [FolderName]
-        </div>
-        <div className="file-container">
-          <FcFolder /> [FolderName]
-        </div>
-        <div className="file-container">
-          <FcFolder /> [FolderName]
-        </div>
-        <div className="file-container">
-          <FcFile /> test.pdf
-        </div>
-        <div className="file-container">
-          <FcFile /> test.pdf
-        </div>
-        <div className="file-container">
-          <FcFile /> test.pdf
-        </div>
-        <div className="file-container">
-          <FcFile /> test.pdf
-        </div>
-        <div className="file-container">
-          <FcFile /> test.pdf
-        </div>
-        <div className="file-container">
-          <FcFile /> test.pdf
-        </div>
-        <div className="file-container">
-          <FcFile /> test.pdf
-        </div>
-        <div className="file-container">
-          <FcFile /> test.pdf
-        </div>
-        <div className="file-container">
-          <FcFile /> test.pdf
-        </div>
+        {items}
       </div>
     </section>
   )
