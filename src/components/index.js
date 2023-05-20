@@ -3,8 +3,19 @@ import CommandBar from './CommandBar'
 import Taskbar from './Taskbar'
 import ViewerDivider from './ViewerDivider'
 import FilesViewer from './FilesViewer'
-import FileViewer from './FileViewer'
-import FileViewerBar from './FileViewerBar'
+import DirectoryListViewer from './DirectoryListViewer'
+import DirectoryListViewerBar from './DirectoryListViewerBar'
 import SearchBar from './SearchBar'
+import FileViewerEntry from './FileViewerEntry'
 
-export { CommandBar, Commander, Taskbar, ViewerDivider, FilesViewer, FileViewer, FileViewerBar, SearchBar }
+export {
+  CommandBar,
+  Commander,
+  Taskbar,
+  ViewerDivider,
+  FilesViewer,
+  DirectoryListViewer,
+  DirectoryListViewerBar,
+  SearchBar,
+  FileViewerEntry,
+}
