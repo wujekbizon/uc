@@ -1,7 +1,7 @@
-import './FileViewerBar.scss'
+import './DirectoryListViewerBar.scss'
 import React from 'react'
 
-const FileViewerBar = () => {
+const DirectoryListViewerBar = () => {
   return (
     <nav className="file_view-bar">
       <div className="drive-info">
@@ -21,4 +21,4 @@ const FileViewerBar = () => {
     </nav>
   )
 }
-export default FileViewerBar
+export default DirectoryListViewerBar
