@@ -33,9 +33,9 @@ const FilesViewer = () => {
 
   return (
     <section className="files-viewer">
-      <DirectoryListViewer data={new FileViewerData()} focused={focused === 0} />
+      <DirectoryListViewer data={new FileViewerData()} index={0} focused={focused === 0} />
       <ViewerDivider />
-      <DirectoryListViewer data={new FileViewerData()} focused={focused === 1} />
+      <DirectoryListViewer data={new FileViewerData()} index={1} focused={focused === 1} />
     </section>
   )
 }
