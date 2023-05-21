@@ -26,8 +26,6 @@ const FileViewerEntry = ({ index, entry, cursor_over }) => {
   }
 
   const stateCss = () => {
-    // if (index < 5) 
-      // console.log(`file index: ${index}, cursor over: ${cursor_over}`)
     return `file-container ${(cursor_over ? ' file-cursor-over' : '')}${entry.selected ? ' file-selected' : ''}`
   }
 

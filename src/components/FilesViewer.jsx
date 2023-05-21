@@ -15,7 +15,7 @@ const FilesViewer = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [])
 
   const handleKeyDown = (event) => {
     event.preventDefault()
@@ -25,7 +25,7 @@ const FilesViewer = () => {
         if (focused >= directoryViewCount) {
           focused = 0
         }
-        
+
         return focused
       })
     }
