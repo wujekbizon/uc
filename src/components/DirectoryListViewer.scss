@@ -23,4 +23,14 @@
       background-color: #717cb480;
     }
   }
+
+  .file-selected {
+    border: #292d3e;
+    border-style: dotted;
+  }
+
+  .file-cursor-over {
+    border: #292d3e;
+    border-style: solid;
+  }
 }
