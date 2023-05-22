@@ -1,9 +1,10 @@
 import './CommandBar.scss'
-import React, { useMemo, useEffect } from 'react'
-import { links } from '../data/commandBarLinks'
+import React, { useMemo, useEffect, useState } from 'react'
+import { links, subLinksIcons } from '../data/commandBarLinks'
 import os from 'socket:os'
 
 const CommandBar = () => {
+  const [active, setActive] = useState(null)
   // memoize generic fn using the useMemo hook to prevent unnecessary re-renders.
   // we passing key and modifiers parameters and fn returns listener fn that is
   // executed when the key and modfiers match event that is fires.
@@ -70,12 +71,39 @@ const CommandBar = () => {
     }
   }, [memoizeHandleKeyPress])
 
+  const handleClick = (title, id) => {
+    switch (title) {
+      case 'Reread Source':
+      case 'File Names':
+      case 'All Files':
+      case 'Thumbnail':
+      case 'Go Back':
+      case 'Go Forward':
+      case 'Invert':
+      case 'Search':
+      case 'Rename Files':
+      case 'Notepad':
+      case 'Sync Dir':
+      case 'Copy Names':
+        console.log(title)
+        setActive(id)
+        break
+      default:
+        console.log('Invalid option')
+        break
+    }
+  }
+
+  const displaySubmenu = (event) => {}
+
   return (
     <section className="commandbar">
       <div className="commandbar_list-container">
         <ul className="commandbar_list">
           {links.map(({ link }, index) => (
-            <li key={index}>{link}</li>
+            <li key={index} onMouseOver={displaySubmenu}>
+              {link}
+            </li>
           ))}
         </ul>
         <div>
@@ -87,7 +115,16 @@ const CommandBar = () => {
           </h4>
         </div>
       </div>
-      <div></div>
+      <div className="commandbar-submenu">
+        {subLinksIcons.map(({ id, title, icon }, index) => (
+          <div key={id} className={active === index + 1 ? 'commandbar-icons active' : 'commandbar-icons'}>
+            <div className="icon" onClick={() => handleClick(title, id)}>
+              {icon}
+            </div>
+            <div className="commandbar-info">{title}</div>
+          </div>
+        ))}
+      </div>
     </section>
   )
 }
