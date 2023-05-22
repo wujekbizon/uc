@@ -7,7 +7,7 @@ import FileViewerData from '../api/FileViewerData'
 
 const FilesViewer = () => {
   const directoryViewCount = 2
-  const [focused, setFocused] = useState(0)
+  const [focusedPaneIndex, setFocusedPaneIndex] = useState(0)
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -20,7 +20,7 @@ const FilesViewer = () => {
   const handleKeyDown = (event) => {
     event.preventDefault()
     if (event.key === 'Tab') {
-      setFocused((focused) => {
+      setFocusedPaneIndex((focused) => {
         focused++
         if (focused >= directoryViewCount) {
           focused = 0
@@ -33,9 +33,9 @@ const FilesViewer = () => {
 
   return (
     <section className="files-viewer">
-      <DirectoryListViewer data={new FileViewerData()} index={0} focused={focused === 0} />
+      <DirectoryListViewer data={new FileViewerData()} index={0} focused={focusedPaneIndex === 0} />
       <ViewerDivider />
-      <DirectoryListViewer data={new FileViewerData()} index={1} focused={focused === 1} />
+      <DirectoryListViewer data={new FileViewerData()} index={1} focused={focusedPaneIndex === 1} />
     </section>
   )
 }
