@@ -1,8 +1,9 @@
 import process from 'socket:process'
-
 import { createRoot } from 'react-dom/client'
 import React from 'react'
 import enableSocketReload from './utils/reload.js'
+import { Provider } from 'react-redux'
+import { store } from './state/store.js'
 import App from './App.jsx'
 
 enableSocketReload({
@@ -23,4 +24,8 @@ if (process.env.DEBUG) {
 }
 
 const root = createRoot(document.getElementById('root'))
-root.render(<App />)
+root.render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+)
