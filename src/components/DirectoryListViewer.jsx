@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 
 // Components
 import { DirectoryListViewerBar, FileViewerEntry } from './index'
-import FileViewerData from '../api/FileViewerData'
+import FileViewerData, { FILE_SORT_MODE_DATE, SORT_DESCENDING } from '../api/FileViewerData'
 
 /**
  *
@@ -14,8 +14,8 @@ const FileViewer = ({ data }) => {
   const [entries, setEntries] = useState(['[..]'])
 
   useEffect(() => {
-    data.refresh().then(() => {
-      setEntries((prevEntries) => ['..', ...prevEntries, ...data._entries])
+    data.refresh(FILE_SORT_MODE_DATE, SORT_DESCENDING).then(() => {
+      setEntries(() => ['..', ...data._entries])
     })
   }, [])
 
