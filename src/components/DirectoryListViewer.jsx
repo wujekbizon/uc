@@ -21,7 +21,7 @@ const FileViewer = ({ data, focused }) => {
     })
   }, [])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (focused)
       window.addEventListener('keydown', handleKeyDown)
 
@@ -31,7 +31,7 @@ const FileViewer = ({ data, focused }) => {
     };
   }, [focused])
 
-  React.useEffect(() => {
+  useEffect(() => {
     // unsubscribe and resubscribe when focus is lost, otherwise other pane can't be controlled with keyboard
     if (focused)
       window.addEventListener('keydown', handleKeyDown)

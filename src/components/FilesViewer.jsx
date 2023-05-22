@@ -7,9 +7,9 @@ import FileViewerData from '../api/FileViewerData'
 
 const FilesViewer = () => {
   const directoryViewCount = 2
-  const [focused, cycleFocused] = useState(0)
+  const [focused, setFocused] = useState(0)
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
@@ -20,7 +20,7 @@ const FilesViewer = () => {
   const handleKeyDown = (event) => {
     event.preventDefault()
     if (event.key === 'Tab') {
-      cycleFocused((focused) => {
+      setFocused((focused) => {
         focused++
         if (focused >= directoryViewCount) {
           focused = 0
