@@ -2,6 +2,10 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   isSubMenuOpen: false,
+  location: {
+    center: 100,
+    bottom: 100,
+  },
 }
 
 const modalsSlice = createSlice({

@@ -7,7 +7,7 @@ export const store = configureStore({
   },
 })
 
-export const actionsCreator = {
+export const actionCreators = {
   openSubMenu,
   closeSubMenu,
 }

@@ -1,10 +1,14 @@
 import './CommandBar.scss'
 import React, { useMemo, useEffect, useState } from 'react'
 import { links, subLinksIcons } from '../data/commandBarLinks'
+import { useSelector } from 'react-redux'
+import { useActions } from '../hooks/useActions'
 import os from 'socket:os'
 
 const CommandBar = () => {
   const [active, setActive] = useState(null)
+  const isSubMenuOpen = useSelector((state) => state.modals.isSubMenuOpen)
+  const { openSubMenu, closeSubMenu } = useActions()
   // memoize generic fn using the useMemo hook to prevent unnecessary re-renders.
   // we passing key and modifiers parameters and fn returns listener fn that is
   // executed when the key and modfiers match event that is fires.
@@ -94,7 +98,12 @@ const CommandBar = () => {
     }
   }
 
-  const displaySubmenu = (event) => {}
+  const displaySubmenu = (event) => {
+    // const page = event.target.textContent
+    // const tempBtn = event.target.getBoundingClientRect()
+    // const center = (tempBtn.left + tempBtn.right) / 2
+    // const bottom = tempBtn.bottom - 3
+  }
 
   return (
     <section className="commandbar">

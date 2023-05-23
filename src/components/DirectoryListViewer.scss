@@ -18,19 +18,19 @@
     font-size: 14px;
     color: #8f93a2;
     cursor: pointer;
+    border: 1px solid transparent;
 
     &:hover {
-      background-color: #717cb480;
+      background-color: rgba(113, 124, 180, 0.5);
     }
   }
 
   .file-selected {
-    border: #292d3e;
-    border-style: dotted;
+    border: 1px dotted #292d3e;
   }
 
   .file-cursor-over {
-    border: #292d3e;
-    border-style: solid;
+    border: 1px solid #292d3e;
+    background-color: rgba(113, 124, 180, 0.5);
   }
 }

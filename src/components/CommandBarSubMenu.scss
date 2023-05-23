@@ -1,0 +1,13 @@
+.commandbar-submenu {
+  background: hsl(209, 61%, 16%);
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.3s linear;
+  height: 400px;
+  width: 50%;
+  border: 5px solid hsl(209, 61%, 16%);
+  z-index: 11;
+  transition: all 0.3s ease-in-out;
+}
