@@ -1,8 +1,6 @@
 import './CommandBar.scss'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { links, subLinksIcons } from '../data/commandBarLinks'
-import { useSelector } from 'react-redux'
-import { useActions } from '../hooks/useActions'
 import memoizeHandleKeyPress from '../helpers/keyboardUtilis'
 import { useMenuShortcuts } from '../hooks/useMenuShortcuts'
 
@@ -11,8 +9,6 @@ import { CommandBarSubMenu } from './index'
 
 const CommandBar = () => {
   const [active, setActive] = useState(null)
-  const isSubMenuOpen = useSelector((state) => state.modals.isSubMenuOpen)
-  const { openSubMenu, closeSubMenu } = useActions()
   const handleKeyPress = memoizeHandleKeyPress()
 
   useMenuShortcuts(handleKeyPress)
@@ -76,7 +72,7 @@ const CommandBar = () => {
           </div>
         ))}
       </div>
-      {isSubMenuOpen && <CommandBarSubMenu />}
+      <CommandBarSubMenu />
     </section>
   )
 }

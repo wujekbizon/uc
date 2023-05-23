@@ -1,13 +1,44 @@
 .commandbar-submenu {
-  background: hsl(209, 61%, 16%);
+  display: none;
   position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  transition: all 0.3s linear;
-  height: 400px;
-  width: 50%;
-  border: 5px solid hsl(209, 61%, 16%);
-  z-index: 11;
-  transition: all 0.3s ease-in-out;
+  top: 30px;
+  left: 0;
+  background-color: #1f2233;
+  border: 1px solid #292d3e;
+  padding: 5px;
+
+  .submenu-item {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+
+    .icon {
+      margin-right: 10px;
+      font-size: 15px;
+    }
+
+    p {
+      margin-left: 40px;
+      font-weight: 200;
+      color: #c792ea9d;
+    }
+
+    h4 {
+      color: #717cb4;
+    }
+
+    span {
+      margin-left: 15px;
+
+      &:hover {
+        color: chocolate;
+      }
+    }
+  }
+}
+
+.show-submenu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
