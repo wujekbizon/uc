@@ -1,11 +1,21 @@
 import React from 'react'
-import { FcRefresh } from 'react-icons/fc'
 import { MdOutlineGridView, MdViewQuilt, MdOutlineDriveFileRenameOutline, MdSyncAlt } from 'react-icons/md'
-import { FcViewDetails, FcSearch } from 'react-icons/fc'
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from 'react-icons/fa'
 import { BiNotepad } from 'react-icons/bi'
-import { IoInvertMode } from 'react-icons/io5'
+import { IoInvertMode, IoSearch } from 'react-icons/io5'
 import { RiFileTextFill } from 'react-icons/ri'
+import { SlRefresh } from 'react-icons/sl'
+import { AiOutlineFolderView } from 'react-icons/ai'
+
+export const menuOptions = [
+  { key: 'f', menu: 'Files' },
+  { key: 'm', menu: 'Mark' },
+  { key: 'c', menu: 'Commands' },
+  { key: 'n', menu: 'Net' },
+  { key: 'w', menu: 'Show' },
+  { key: 'o', menu: 'Configuration' },
+  { key: 's', menu: 'Start' },
+]
 
 export const links = [
   {
@@ -62,7 +72,7 @@ export const links = [
 export const subLinksIcons = [
   {
     id: 1,
-    icon: <FcRefresh />,
+    icon: <SlRefresh />,
     title: 'Reread Source',
   },
   {
@@ -77,7 +87,7 @@ export const subLinksIcons = [
   },
   {
     id: 4,
-    icon: <FcViewDetails />,
+    icon: <AiOutlineFolderView />,
     title: 'Thumbnail',
   },
   {
@@ -97,7 +107,7 @@ export const subLinksIcons = [
   },
   {
     id: 8,
-    icon: <FcSearch />,
+    icon: <IoSearch />,
     title: 'Search',
   },
   {
