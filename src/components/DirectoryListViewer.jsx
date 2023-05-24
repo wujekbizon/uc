@@ -10,7 +10,7 @@ import FileViewerData, { FILE_SORT_MODE_DATE, SORT_DESCENDING } from '../api/Fil
  * @param {FileViewerData} data
  * @returns
  */
-const FileViewer = ({ data, focused }) => {
+const FileViewer = ({ data, focused, onEntryCallback }) => {
   const [entries, setEntries] = useState(['[..]'])
   const [cursorOver, setCursorOver] = useState(0)
 
@@ -34,7 +34,7 @@ const FileViewer = ({ data, focused }) => {
       setEntries(() => ['..', ...data._entries])
       setCursorOver(0)
     })
-  }, [])
+  }, [data])
 
   useEffect(() => {
     if (focused) window.addEventListener('keydown', memoizeHandleKeyDown)
@@ -50,7 +50,7 @@ const FileViewer = ({ data, focused }) => {
       <DirectoryListViewerBar />
       <div className="files-container">
         {entries.map((entry, k) => (
-          <FileViewerEntry key={k} index={k} entry={entry} cursor_over={focused && k === cursorOver} />
+          <FileViewerEntry key={k} index={k} entry={entry} cursor_over={focused && k === cursorOver} onEntryCallback={onEntryCallback} />
         ))}
       </div>
     </section>

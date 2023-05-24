@@ -77,6 +77,22 @@ export default class FileViewerData {
   get currentDirectory() { return this._currentDirectory }
   set currentDirectory(value) { this._currentDirectory = value }
 
+  traverse(entry) {
+    // todo (@mribbons): support relative path, full path, split by dir sep
+    // todo (@mribbons): navigate as far as possible even if final path doesn't exist
+    // dirname returns input if input ends with \
+    // prevent \\ in path
+    const cd = this.currentDirectory.endsWith('\\') ? this.currentDirectory.substring(0, this.currentDirectory.length-1) : this.currentDirectory
+    if (entry === '..') {
+      return new FileViewerData(path.dirname(cd))
+    } else if (entry.isDirectory()) {
+      return new FileViewerData(path.join(cd, entry.name))
+    } else {
+      // todo (@mribbons): cursor should move to file if path ends in file
+      return this
+    }
+  }
+
   /**
    * get list of entries
    */
