@@ -12,7 +12,8 @@ import fs from 'socket:fs/promises'
  * @param {fs.Dirent|String} entry - File entry or '..'
  */
 
-const DirectoryEntry = ({ index, entry, cursor_over }) => {
+
+const DirectoryEntry = ({ index, entry, cursor_over, onEntryCallback }) => {
   // todo Greg, handle onClick events, also do the same for the Key press .. 'Enter' , F3 or F4 ?
   // Later we'll move that to Redux store, so whenever click or press key, event that occurs it will trigger an action
   const onHandleUpDirectoryLevel = () => {
@@ -26,23 +27,27 @@ const DirectoryEntry = ({ index, entry, cursor_over }) => {
   }
 
   const stateCss = () => {
-    return `file-container ${(cursor_over ? ' file-cursor-over' : '')}${entry.selected ? ' file-selected' : ''}`
+    return `file-container ${cursor_over ? ' file-cursor-over' : ''}${entry.selected ? ' file-selected' : ''}`
+  }
+
+  const onClick = () => {
+    onEntryCallback(entry)
   }
 
   return (
     <>
       {entry === '..' && (
-        <div className={stateCss()} onClick={onHandleUpDirectoryLevel}>
+        <div className={stateCss()} onClick={onClick}>
           <ImArrowUp /> [..]
         </div>
       )}
       {typeof entry !== 'string' && entry.isDirectory() && (
-        <div className={stateCss()} onClick={onHandleInsideDirectory}>
+        <div className={stateCss()} onClick={onClick}>
           <FcFolder /> [{entry.name}]
         </div>
       )}
       {typeof entry !== 'string' && !entry.isDirectory() && (
-        <div className={stateCss()} onClick={onHandleFileEdit}>
+        <div className={stateCss()} onClick={onClick}>
           <FcFile /> {entry.name}
         </div>
       )}
