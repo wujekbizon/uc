@@ -1,5 +1,5 @@
 import './DirectoryListViewer.scss'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 
 // Components
 import { DirectoryListViewerBar, FileViewerEntry } from './index'
@@ -14,6 +14,21 @@ const FileViewer = ({ data, focused }) => {
   const [entries, setEntries] = useState(['[..]'])
   const [cursorOver, setCursorOver] = useState(0)
 
+  // useMemo will memoize the function and recalculate it only when either `focused` or `entries.length`
+  // change, so we can avoid unnecessary re-renders and improve the performance.
+  const memoizeHandleKeyDown = useMemo(() => {
+    return (event) => {
+      if (!focused) return
+
+      if (event.key === 'ArrowUp') {
+        setCursorOver((prevCursor) => Math.max(prevCursor - 1, 0))
+      }
+      if (event.key === 'ArrowDown') {
+        setCursorOver((prevCursor) => Math.min(prevCursor + 1, entries.length - 1))
+      }
+    }
+  }, [focused, entries.length])
+
   useEffect(() => {
     data.refresh(FILE_SORT_MODE_DATE, SORT_DESCENDING).then(() => {
       setEntries(() => ['..', ...data._entries])
@@ -22,41 +37,20 @@ const FileViewer = ({ data, focused }) => {
   }, [])
 
   useEffect(() => {
-    if (focused)
-      window.addEventListener('keydown', handleKeyDown)
+    if (focused) window.addEventListener('keydown', memoizeHandleKeyDown)
 
     // cleanup this component
     return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    };
-  }, [focused])
-
-  useEffect(() => {
-    // unsubscribe and resubscribe when focus is lost, otherwise other pane can't be controlled with keyboard
-    if (focused)
-      window.addEventListener('keydown', handleKeyDown)
-    else
-      window.removeEventListener('keydown', handleKeyDown)
-
-  }, [focused])
-
-  const handleKeyDown = (event) => {
-    if (!focused) return
-
-    if (event.key === 'ArrowUp') {
-      setCursorOver((prevCursor) => Math.max(prevCursor - 1, 0) )
+      window.removeEventListener('keydown', memoizeHandleKeyDown)
     }
-    if (event.key === 'ArrowDown') {
-      setCursorOver((prevCursor) => Math.min(prevCursor + 1, entries.length - 1))
-    }
-  }
+  }, [memoizeHandleKeyDown])
 
   return (
     <section className="file-viewer">
       <DirectoryListViewerBar />
       <div className="files-container">
         {entries.map((entry, k) => (
-          <FileViewerEntry key={k} index={k} entry={entry} cursor_over={focused && (k === cursorOver)} />
+          <FileViewerEntry key={k} index={k} entry={entry} cursor_over={focused && k === cursorOver} />
         ))}
       </div>
     </section>

@@ -1,20 +1,20 @@
 .divider {
-  flex: 0.07;
+  flex: 0.08;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  margin-top: 80px;
 
   .icon-container {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 4px;
     border: 1px solid #0f111a;
     cursor: pointer;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 
     &:hover {
       border: 1px solid #292d3e;
@@ -22,13 +22,39 @@
     }
 
     .icon {
-      content: '';
-      font-size: 20px;
+      font-size: 22px;
       color: #eeffff;
-
-      &:hover {
-        content: 'icon';
-      }
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+
+    .icon-text {
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      bottom: -20px;
+      left: -11px;
+      right: 0;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 0;
+      background: transparent;
+    }
+
+    &:hover .icon-text {
+      width: 52px;
+      height: 15px;
+      overflow: visible;
+      background-color: #090b10;
+      border: 1px solid #292d3e;
+    }
+  }
+
+  .active {
+    background-color: #090b10;
+    border: 1px solid #292d3e;
   }
 }

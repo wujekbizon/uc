@@ -7,6 +7,7 @@ import DirectoryListViewer from './DirectoryListViewer'
 import DirectoryListViewerBar from './DirectoryListViewerBar'
 import SearchBar from './SearchBar'
 import FileViewerEntry from './FileViewerEntry'
+import CommandBarSubMenu from './CommandBarSubMenu'
 
 export {
   CommandBar,
@@ -18,4 +19,5 @@ export {
   DirectoryListViewerBar,
   SearchBar,
   FileViewerEntry,
+  CommandBarSubMenu,
 }
