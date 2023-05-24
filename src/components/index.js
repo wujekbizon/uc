@@ -2,11 +2,11 @@ import Commander from './Commander'
 import CommandBar from './CommandBar'
 import Taskbar from './Taskbar'
 import ViewerDivider from './ViewerDivider'
-import FilesViewer from './FilesViewer'
+import PanelView from './PanelView'
 import DirectoryListViewer from './DirectoryListViewer'
 import DirectoryListViewerBar from './DirectoryListViewerBar'
 import SearchBar from './SearchBar'
-import FileViewerEntry from './FileViewerEntry'
+import DirectoryEntry from './DirectoryEntry'
 import CommandBarSubMenu from './CommandBarSubMenu'
 
 export {
@@ -14,10 +14,10 @@ export {
   Commander,
   Taskbar,
   ViewerDivider,
-  FilesViewer,
+  PanelView,
   DirectoryListViewer,
   DirectoryListViewerBar,
   SearchBar,
-  FileViewerEntry,
+  DirectoryEntry,
   CommandBarSubMenu,
 }

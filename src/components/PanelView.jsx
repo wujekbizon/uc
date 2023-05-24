@@ -1,9 +1,9 @@
-import './FilesViewer.scss'
+import './PanelView.scss'
 import React, { useEffect, useState, useMemo } from 'react'
 
 // Components
 import { ViewerDivider, DirectoryListViewer } from './index'
-import FileViewerData from '../api/FileViewerData'
+import DirectoryListData from '../api/DirectoryListData'
 
 // todo: provide list of starting directories from saved state
 const initFileViewerData = (n) => {
@@ -63,9 +63,12 @@ const FilesViewer = () => {
   return (
     <section className="files-viewer">
       <DirectoryListViewer data={viewData[0]} index={0} focused={focusedPaneIndex === 0} onEntryCallback={(entry) => onEntryAction(0, entry) } />
+    <section className="panel-view">
+      <DirectoryListViewer data={new DirectoryListData()} index={0} focused={focusedPaneIndex === 0} />
       <ViewerDivider />
       <DirectoryListViewer data={viewData[1]} index={1} focused={focusedPaneIndex === 1} onEntryCallback={(entry) => onEntryAction(1, entry) } />
+      <DirectoryListViewer data={new DirectoryListData()} index={1} focused={focusedPaneIndex === 1} />
     </section>
   )
 }
-export default FilesViewer
+export default PanelView
