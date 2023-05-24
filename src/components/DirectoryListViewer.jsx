@@ -2,15 +2,15 @@ import './DirectoryListViewer.scss'
 import React, { useEffect, useState, useMemo } from 'react'
 
 // Components
-import { DirectoryListViewerBar, FileViewerEntry } from './index'
-import FileViewerData, { FILE_SORT_MODE_DATE, SORT_DESCENDING } from '../api/FileViewerData'
+import { DirectoryListViewerBar, DirectoryEntry } from './index'
+import DirectoryListData, { FILE_SORT_MODE_DATE, SORT_DESCENDING } from '../api/DirectoryListData'
 
 /**
  *
- * @param {FileViewerData} data
+ * @param {DirectoryListData} data
  * @returns
  */
-const FileViewer = ({ data, focused }) => {
+const DirectoryListViewer = ({ data, focused }) => {
   const [entries, setEntries] = useState(['[..]'])
   const [cursorOver, setCursorOver] = useState(0)
 
@@ -50,10 +50,10 @@ const FileViewer = ({ data, focused }) => {
       <DirectoryListViewerBar />
       <div className="files-container">
         {entries.map((entry, k) => (
-          <FileViewerEntry key={k} index={k} entry={entry} cursor_over={focused && k === cursorOver} />
+          <DirectoryEntry key={k} index={k} entry={entry} cursor_over={focused && k === cursorOver} />
         ))}
       </div>
     </section>
   )
 }
-export default FileViewer
+export default DirectoryListViewer

@@ -1,11 +1,11 @@
-import './FilesViewer.scss'
+import './PanelView.scss'
 import React, { useEffect, useState, useMemo } from 'react'
 
 // Components
 import { ViewerDivider, DirectoryListViewer } from './index'
-import FileViewerData from '../api/FileViewerData'
+import DirectoryListData from '../api/DirectoryListData'
 
-const FilesViewer = () => {
+const PanelView = () => {
   const directoryViewCount = 2
   const [focusedPaneIndex, setFocusedPaneIndex] = useState(0)
 
@@ -34,11 +34,11 @@ const FilesViewer = () => {
   }, [memoizeHandleKeyDown])
 
   return (
-    <section className="files-viewer">
-      <DirectoryListViewer data={new FileViewerData()} index={0} focused={focusedPaneIndex === 0} />
+    <section className="panel-view">
+      <DirectoryListViewer data={new DirectoryListData()} index={0} focused={focusedPaneIndex === 0} />
       <ViewerDivider />
-      <DirectoryListViewer data={new FileViewerData()} index={1} focused={focusedPaneIndex === 1} />
+      <DirectoryListViewer data={new DirectoryListData()} index={1} focused={focusedPaneIndex === 1} />
     </section>
   )
 }
-export default FilesViewer
+export default PanelView
