@@ -92,7 +92,6 @@ export default class DirectoryListData {
       return this
     }
   }
-
   /**
    * get list of entries
    */

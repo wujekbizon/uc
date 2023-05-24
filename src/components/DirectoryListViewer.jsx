@@ -10,6 +10,7 @@ import DirectoryListData, { FILE_SORT_MODE_DATE, SORT_DESCENDING } from '../api/
  * @param {DirectoryListData} data
  * @returns
  */
+
 const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
   const [entries, setEntries] = useState(['[..]'])
   const [cursorOver, setCursorOver] = useState(0)
