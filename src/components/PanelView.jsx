@@ -5,12 +5,11 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { ViewerDivider, DirectoryListViewer } from './index'
 import DirectoryListData from '../api/DirectoryListData'
 
-
 // todo: provide list of starting directories from saved state
 const initFileViewerData = (n) => {
   let a = []
   while (a.length < n) {
-    a.push(new FileViewerData())
+    a.push(new DirectoryListData())
   }
 
   return a
@@ -20,7 +19,7 @@ const PanelView = () => {
   const directoryViewCount = 2
   const [focusedPaneIndex, setFocusedPaneIndex] = useState(0)
   const [viewData, setFileViewerData] = useState(initFileViewerData(directoryViewCount))
-  
+
   // wrapping in useMemo so we can avoid unnecessary re-renders and improve the performance.
   const memoizeHandleKeyDown = useMemo(() => {
     return (event) => {
@@ -63,9 +62,19 @@ const PanelView = () => {
 
   return (
     <section className="panel-view">
-      <DirectoryListViewer data={viewData[0]} index={0} focused={focusedPaneIndex === 0} onEntryCallback={(entry) => onEntryAction(0, entry) } />
+      <DirectoryListViewer
+        data={viewData[0]}
+        index={0}
+        focused={focusedPaneIndex === 0}
+        onEntryCallback={(entry) => onEntryAction(0, entry)}
+      />
       <ViewerDivider />
-      <DirectoryListViewer data={viewData[1]} index={1} focused={focusedPaneIndex === 1} onEntryCallback={(entry) => onEntryAction(1, entry) } />
+      <DirectoryListViewer
+        data={viewData[1]}
+        index={1}
+        focused={focusedPaneIndex === 1}
+        onEntryCallback={(entry) => onEntryAction(1, entry)}
+      />
     </section>
   )
 }

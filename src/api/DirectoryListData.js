@@ -84,9 +84,9 @@ export default class DirectoryListData {
     // prevent \\ in path
     const cd = this.currentDirectory.endsWith('\\') ? this.currentDirectory.substring(0, this.currentDirectory.length-1) : this.currentDirectory
     if (entry === '..') {
-      return new FileViewerData(path.dirname(cd))
+      return new DirectoryListData(path.dirname(cd))
     } else if (entry.isDirectory()) {
-      return new FileViewerData(path.join(cd, entry.name))
+      return new DirectoryListData(path.join(cd, entry.name))
     } else {
       // todo (@mribbons): cursor should move to file if path ends in file
       return this
