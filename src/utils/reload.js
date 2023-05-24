@@ -56,6 +56,25 @@ let _opts = {}
 let _copyPath = undefined
 let _debounce_handle = null
 
+async function delay(ms) {
+  return await new Promise((resolve) =>
+  {
+    setTimeout(() => { resolve() }, ms )
+  })
+}
+
+export function hashBuffer (buf, start, length) {
+  let hash = 0;
+  for (let i = start, len = length; i < start + len; i++) {
+      if (i >= buf.byteLength)
+        throw Error(`${i} exceeds buffer length ${buf.byteLength}, start: ${start}, length: ${length}`)
+      let byte = buf.readUInt8(i);
+      hash = (hash << 5) - hash + byte;
+      hash = hash & 0xffff; // Convert to 32bit integer
+  }
+  return hash; 
+}
+
 const recursePath = async (path, file_fn, data) => {
   for (const entry of await fs.readdir(path, { withFileTypes: true })) {
     let entry_path = Path.join(path, entry.name)
@@ -180,11 +199,19 @@ async function checkPath(filename) {
   } catch (_) {}
 }
 
+let updating = false
+
 const sscBuildOutput = async (dest) => {
+  if (updating)
+    return false
+
+  updating = true
+
   let recurseData = {
     dest: dest,
     base: _copyPath,
     changed: false,
+    now: new Date().getTime()
   }
 
   checkPath(dest)
@@ -218,6 +245,10 @@ const sscBuildOutput = async (dest) => {
         // console.log(`not in dest ${file} => ${dest_path}`)
         update = true
       }
+      // reenable this check if there are still copy reattempts due to incorrect hash
+      // if (update && data.now - stat1.mtimeMs < _opts.scanInterval) {
+      //   update = false
+      // }
 
       if (update) {
         // todo(@mribbons): fs.mkdir(dirname(dest_path)) - dirname / drive letter issue on win32
@@ -227,7 +258,46 @@ const sscBuildOutput = async (dest) => {
         // await fs.utimes(dest_path, parseInt(stat1.mtimeMs), parseInt(stat1.mtimeMs))
         // ensure parent exists
         await mkdir(Path.dirname(dest_path))
-        await fs.writeFile(dest_path, await fs.readFile(file))
+        // this loop / check is no longer necessary, problem now resolved
+        let attempts = 0
+        while (true) {
+          try {
+            const input = Buffer.from(await fs.readFile(file))
+            const inputHash = hashBuffer(input, 0, input.byteLength)
+            await fs.writeFile(dest_path, input.toString())
+            const output = Buffer.from(await fs.readFile(dest_path))
+            const outputHash = hashBuffer(output, 0, output.byteLength)
+
+            if (outputHash !== inputHash) {
+              const ts = new Date().getTime()
+              const debugFolder = Path.dirname(_copyPath)
+              const file1 = Path.join(debugFolder, `${Path.basename(file)}_source_${ts}.${Path.extname(file)}`)
+              const file2 = Path.join(debugFolder, `${Path.basename(file)}_copy_${ts}.${Path.extname(file)}`)
+              await fs.writeFile(file1, input.toString())
+              await fs.writeFile(file2, output.toString())
+
+              let sleep = Math.pow(100, attempts+1)
+              let message = `Hash check failed: ${inputHash} !=== ${outputHash} after copying files, please call support!\nSee ${file1}\nAnd ${file2}\nSleeping for ${sleep}`
+
+              if (attempts > 2) {
+                throw new Error(message)
+              } else {
+                console.log(message)
+                await delay(sleep)
+              }
+            } else {
+              if (attempts > 1) {
+                console.log(`hash check successful after ${attempts + 1} tries`)
+              }
+              break;
+            }
+            attempts++
+          } catch (e) {
+            console.log(`read failed: ${e.message}\n${e.stack}`)
+            delay(100)
+          }
+        }
+
         data.changed = true
       }
     },
@@ -235,6 +305,7 @@ const sscBuildOutput = async (dest) => {
   )
 
   // console.log(`recurse data changed: ${recurseData.changed}`)
+  updating = false
   return recurseData.changed
 }
 

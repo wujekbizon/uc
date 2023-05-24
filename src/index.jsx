@@ -8,7 +8,7 @@ import App from './App.jsx'
 
 enableSocketReload({
   startDir: process.cwd(),
-  liveReload: false,
+  liveReload: true,
   scanInterval: 200,
   debounce: 1001,
   debounceCallback: () => {
