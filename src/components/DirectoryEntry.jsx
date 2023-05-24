@@ -12,7 +12,7 @@ import fs from 'socket:fs/promises'
  * @param {fs.Dirent|String} entry - File entry or '..'
  */
 
-const FileViewerEntry = ({ index, entry, cursor_over }) => {
+const DirectoryEntry = ({ index, entry, cursor_over }) => {
   // todo Greg, handle onClick events, also do the same for the Key press .. 'Enter' , F3 or F4 ?
   // Later we'll move that to Redux store, so whenever click or press key, event that occurs it will trigger an action
   const onHandleUpDirectoryLevel = () => {
@@ -50,4 +50,4 @@ const FileViewerEntry = ({ index, entry, cursor_over }) => {
   )
 }
 
-export default FileViewerEntry
+export default DirectoryEntry

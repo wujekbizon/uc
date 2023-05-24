@@ -58,10 +58,10 @@ function sortDate (a, b) {
 /**
  * Information for interacting with directory listings
  */
-export default class FileViewerData {
+export default class DirectoryListData {
 
   /**
-   * Create a FileViewerData
+   * Create a DirectoryListData
    * @param {string} initialDirectory - The initial directory the FileViewer should list
    * @param {Number} sortDirection - SORT_ASCENDING (default) | SORT_DESCENDING
    * @param {Number} sortMode - FILE_SORT_MODE_NAME (default) | FILE_SORT_MODE_EXT | FILE_SORT_MODE_SIZE | FILE_SORT_MODE_DATE
