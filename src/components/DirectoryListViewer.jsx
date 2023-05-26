@@ -1,5 +1,7 @@
 import './DirectoryListViewer.scss'
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo} from 'react'
+// custom hooks
+import { useSmoothScroll } from '../hooks/useSmoothScroll'
 
 // Components
 import { DirectoryListViewerBar, DirectoryEntry } from './index'
@@ -14,6 +16,7 @@ import DirectoryListData, { FILE_SORT_MODE_DATE, SORT_DESCENDING } from '../api/
 const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
   const [entries, setEntries] = useState(['[..]'])
   const [cursorOver, setCursorOver] = useState(0)
+  const {selectRef,scrollToSelectedFile} = useSmoothScroll(".file-cursor-over")
 
   // useMemo will memoize the function and recalculate it only when either `focused` or `entries.length`
   // change, so we can avoid unnecessary re-renders and improve the performance.
@@ -46,13 +49,17 @@ const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
     }
   }, [memoizeHandleKeyDown])
 
+  setTimeout(() => {
+    scrollToSelectedFile()
+  },[100])
+
   return (
     <section className="file-viewer">
       <DirectoryListViewerBar />
-      <div className="files-container">
+      <div className="files-container" ref={selectRef}>
         {entries.map((entry, k) => (
           <DirectoryEntry
-            key={k}
+          key={k}
             index={k}
             entry={entry}
             cursor_over={focused && k === cursorOver}

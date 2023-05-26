@@ -1,19 +1,36 @@
 .file-viewer {
   flex: 1;
-  height: 100%;
+  height: calc(100vh - 130px);
   border: 1px solid #292d3e;
   display: flex;
   flex-direction: column;
 
   .files-container {
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+      width: 5px;
+      height: 0;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background:#0f111a;
+      width: 5px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      border: 1px solid #292d3e;
+      background-color: rgba(113, 124, 180, 0.1);
+    }
   }
 
   .file-container {
-    width: 100%;
     display: flex;
+    width: 100%;
     align-items: center;
     font-size: 14px;
     color: #8f93a2;
@@ -31,6 +48,6 @@
 
   .file-cursor-over {
     border: 1px solid #292d3e;
-    background-color: rgba(113, 124, 180, 0.5);
+    background-color: rgba(113, 124, 180, 0.1);
   }
 }
