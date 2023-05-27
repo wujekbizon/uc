@@ -25,9 +25,11 @@ const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
       if (!focused) return
 
       if (event.key === 'ArrowUp') {
+        event.preventDefault()
         setCursorOver((prevCursor) => Math.max(prevCursor - 1, 0))
       }
       if (event.key === 'ArrowDown') {
+        event.preventDefault()
         setCursorOver((prevCursor) => Math.min(prevCursor + 1, entries.length - 1))
       }
       // calling debouncedScroll fn
