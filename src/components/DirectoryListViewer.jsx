@@ -1,5 +1,5 @@
 import './DirectoryListViewer.scss'
-import React, { useEffect, useState, useMemo} from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 // custom hooks
 import { useSmoothScroll } from '../hooks/useSmoothScroll'
 
@@ -16,10 +16,10 @@ import DirectoryListData, { FILE_SORT_MODE_DATE, SORT_DESCENDING } from '../api/
 const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
   const [entries, setEntries] = useState(['[..]'])
   const [cursorOver, setCursorOver] = useState(0)
-  const {selectRef,scrollToSelectedFile} = useSmoothScroll(".file-cursor-over")
+  const { selectRef, debouncedScroll } = useSmoothScroll('.file-cursor-over', 250)
 
-  // useMemo will memoize the function and recalculate it only when either `focused` or `entries.length`
-  // change, so we can avoid unnecessary re-renders and improve the performance.
+  // useMemo will memoize the function and recalculate it only when either `focused`,`entries.length` or
+  // `debouncedScroll` change, so we can avoid unnecessary re-renders and improve the performance.
   const memoizeHandleKeyDown = useMemo(() => {
     return (event) => {
       if (!focused) return
@@ -30,8 +30,10 @@ const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
       if (event.key === 'ArrowDown') {
         setCursorOver((prevCursor) => Math.min(prevCursor + 1, entries.length - 1))
       }
+      // calling debouncedScroll fn
+      debouncedScroll()
     }
-  }, [focused, entries.length])
+  }, [focused, entries.length, debouncedScroll])
 
   useEffect(() => {
     data.refresh(FILE_SORT_MODE_DATE, SORT_DESCENDING).then(() => {
@@ -42,16 +44,11 @@ const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
 
   useEffect(() => {
     if (focused) window.addEventListener('keydown', memoizeHandleKeyDown)
-
     // cleanup this component
     return () => {
       window.removeEventListener('keydown', memoizeHandleKeyDown)
     }
-  }, [memoizeHandleKeyDown])
-
-  setTimeout(() => {
-    scrollToSelectedFile()
-  },[100])
+  }, [memoizeHandleKeyDown, focused])
 
   return (
     <section className="file-viewer">
@@ -59,7 +56,7 @@ const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
       <div className="files-container" ref={selectRef}>
         {entries.map((entry, k) => (
           <DirectoryEntry
-          key={k}
+            key={k}
             index={k}
             entry={entry}
             cursor_over={focused && k === cursorOver}
