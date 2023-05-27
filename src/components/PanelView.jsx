@@ -23,8 +23,8 @@ const PanelView = () => {
   // wrapping in useMemo so we can avoid unnecessary re-renders and improve the performance.
   const memoizeHandleKeyDown = useMemo(() => {
     return (event) => {
-      event.preventDefault()
       if (event.key === 'Tab') {
+        event.preventDefault()
         setFocusedPaneIndex((focused) => {
           focused++
           if (focused >= directoryViewCount) {

@@ -1,11 +1,19 @@
 import './SearchBar.scss'
-import React from 'react'
+import React, { useState } from 'react'
 
 const SearchBar = () => {
+  const [searchFile, setSearchFile] = useState('')
+
+  const onHandleChange = (event) => {
+    console.log(event)
+    setSearchFile(event.target.value)
+    console.log(searchFile)
+  }
+
   return (
     <div className="search">
       <label htmlFor="search">c:\</label>
-      <input id="search" type="text" />
+      <input value={searchFile} id="search" type="text" onChange={onHandleChange} />
     </div>
   )
 }
