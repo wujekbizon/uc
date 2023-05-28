@@ -5,9 +5,7 @@ const SearchBar = () => {
   const [searchFile, setSearchFile] = useState('')
 
   const onHandleChange = (event) => {
-    console.log(event)
     setSearchFile(event.target.value)
-    console.log(searchFile)
   }
 
   return (
