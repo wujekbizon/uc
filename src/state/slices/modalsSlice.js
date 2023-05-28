@@ -6,6 +6,7 @@ const initialState = {
     center: 5,
     bottom: 30,
   },
+  isViewFileModalOpen: false,
 }
 
 const modalsSlice = createSlice({
@@ -18,8 +19,14 @@ const modalsSlice = createSlice({
     closeSubMenu(state) {
       state.isSubMenuOpen = false
     },
+    openViewFileModal(state) {
+      state.isViewFileModalOpen = true
+    },
+    closeViewFileModal(state) {
+      state.isViewFileModalOpen = false
+    },
   },
 })
 
-export const { openSubMenu, closeSubMenu } = modalsSlice.actions
+export const { openSubMenu, closeSubMenu, openViewFileModal, closeViewFileModal } = modalsSlice.actions
 export const modalsReducer = modalsSlice.reducer
