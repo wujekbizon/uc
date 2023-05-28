@@ -1,5 +1,5 @@
 import './PanelView.scss'
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { useActions } from '../hooks/useActions'
 
@@ -68,22 +68,19 @@ const PanelView = () => {
       return [...viewData]
     })
   }
-
   return (
     <section className="panel-view">
-      <DirectoryListViewer
-        data={viewData[0]}
-        index={0}
-        focused={focusedPaneIndex === 0}
-        onEntryCallback={(entry) => onEntryAction(0, entry)}
-      />
-      <ViewerDivider />
-      <DirectoryListViewer
-        data={viewData[1]}
-        index={1}
-        focused={focusedPaneIndex === 1}
-        onEntryCallback={(entry) => onEntryAction(1, entry)}
-      />
+      {viewData.map((data, index) => (
+        <Fragment key={index}>
+          <DirectoryListViewer
+            data={data}
+            index={index}
+            focused={focusedPaneIndex === index}
+            onEntryCallback={(entry) => onEntryAction(index, entry)}
+          />
+          {index !== viewData.length - 1 && <ViewerDivider />}
+        </Fragment>
+      ))}
       {isViewFileModalOpen && <ViewFileModal selectedFile={selectedFile} />}
     </section>
   )
