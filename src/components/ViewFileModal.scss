@@ -1,0 +1,72 @@
+.view-file_modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+
+  .view-file_header {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #292d3e;
+    background-color: rgba(113, 124, 180, 0.1);
+
+    .view-file_title {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 10px;
+
+      span {
+        color: #c792ea;
+      }
+
+      h4 {
+        font-size: 14px;
+        color: #8f93a2;
+      }
+
+      .view-file_icon {
+        font-size: 22px;
+        color: #c792ea;
+        cursor: pointer;
+      }
+    }
+
+    .view-file_nav {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      color: #8f93a2;
+
+      .view-file_menu {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        li {
+          cursor: pointer;
+          margin-left: 20px;
+        }
+      }
+
+      h4 {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .view-file_main {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}
