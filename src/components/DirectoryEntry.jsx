@@ -14,7 +14,7 @@ import fs from 'socket:fs/promises'
  */
 
 const DirectoryEntry = ({ index, entry, cursor_over, onEntryCallback }) => {
-  const onDoubleClick = () => {
+  const onHandleClick = () => {
     onEntryCallback(entry)
   }
 
@@ -25,17 +25,17 @@ const DirectoryEntry = ({ index, entry, cursor_over, onEntryCallback }) => {
   return (
     <>
       {entry === '..' && (
-        <div className={stateCss()} onDoubleClick={onDoubleClick}>
+        <div className={stateCss()} onDoubleClick={onHandleClick}>
           <ImArrowUp /> [..]
         </div>
       )}
       {typeof entry !== 'string' && entry.isDirectory() && (
-        <div className={stateCss()} onDoubleClick={onDoubleClick}>
+        <div className={stateCss()} onDoubleClick={onHandleClick}>
           <FcFolder /> [{entry.name}]
         </div>
       )}
       {typeof entry !== 'string' && !entry.isDirectory() && (
-        <div className={stateCss()} onDoubleClick={onDoubleClick}>
+        <div className={stateCss()} onClick={onHandleClick}>
           <FcFile /> {entry.name}
         </div>
       )}
