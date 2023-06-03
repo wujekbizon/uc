@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
-    "@socketsupply/socket": "^0.3.0",
+    "@socketsupply/socket": "^0.3.2",
     "esbuild-sass-plugin": "^2.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

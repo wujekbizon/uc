@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { links, subLinksIcons } from '../data/commandBarLinks'
 import memoizeHandleKeyPress from '../helpers/keyboardUtilis'
 import { useMenuShortcuts } from '../hooks/useMenuShortcuts'
+import { useActions } from '../hooks/useActions'
 
 // components
 import { CommandBarSubMenu } from './index'
@@ -10,6 +11,7 @@ import { CommandBarSubMenu } from './index'
 const CommandBar = () => {
   const [active, setActive] = useState(null)
   const handleKeyPress = memoizeHandleKeyPress()
+  const { openSubMenu } = useActions()
 
   useMenuShortcuts(handleKeyPress)
 
@@ -37,10 +39,18 @@ const CommandBar = () => {
   }
 
   const displaySubmenu = (event) => {
-    // const page = event.target.textContent
-    // const tempBtn = event.target.getBoundingClientRect()
-    // const center = (tempBtn.left + tempBtn.right) / 2
-    // const bottom = tempBtn.bottom - 3
+    // Extracts the text content of the link that triggered the event,
+    // and removes any whitespace around it using the `trim()` method.
+    const page = event.target.textContent.trim()
+    // Use the `getBoundingClientRect()` method to get the coordinates
+    // of the link relative to the viewport.
+    const tempBtn = event.target.getBoundingClientRect()
+    //  Calculates the start and bottom coordinates
+    const start = tempBtn.right - tempBtn.width
+    const bottom = tempBtn.bottom
+    const coordinates = { start, bottom }
+    // Call openSubMenu function with page and coordinates
+    openSubMenu({ page, coordinates })
   }
 
   return (

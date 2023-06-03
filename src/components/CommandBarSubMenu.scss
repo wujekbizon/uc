@@ -10,7 +10,14 @@
   .submenu-item {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     font-size: 14px;
+    border: 1px solid transparent;
+
+    &:hover {
+      border-color: #414863;
+      background-color: rgba(146, 155, 202, 0.1);
+    }
 
     .icon {
       margin-right: 10px;
@@ -32,6 +39,20 @@
 
       &:hover {
         color: chocolate;
+      }
+    }
+
+    .submenu-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+
+      button {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: #717cb4;
       }
     }
   }
