@@ -2,13 +2,12 @@ import './CommandBarSubMenu.scss'
 import React, { useRef, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { useActions } from '../hooks/useActions'
-import { RiFileTextFill } from 'react-icons/ri'
 
 const CommandBarSubMenu = () => {
   const {
     isSubMenuOpen,
     location,
-    page: { page, sublinks },
+    page: { sublinks },
   } = useSelector((state) => state.modals)
   const { closeSubMenu } = useActions()
   const containerRef = useRef(null)

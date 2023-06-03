@@ -17,16 +17,6 @@ export const menuOptions = [
   { key: 's', menu: 'Start' },
 ]
 
-export const coordinates = {
-  f: { start: 5, bottom: 25.5 },
-  m: { start: 50.68, bottom: 25.5 },
-  c: { start: 98.2, bottom: 25.5 },
-  n: { start: 182.85, bottom: 25.5 },
-  w: { start: 224.31, bottom: 25.5 },
-  o: { start: 276.09, bottom: 25.5 },
-  s: { start: 373.9, bottom: 25.5 },
-}
-
 export const links = [
   {
     link: (
