@@ -11,7 +11,7 @@ const Commander = () => {
   const { isMobile } = useSelector((state) => state.mobilePlatforms)
 
   return (
-    <main className="commander">
+    <main className={isMobile ? 'mobile-commander' : 'commander'}>
       {!isMobile && os.platform() === 'win32' && <CommandBar />}
       {!isMobile && os.platform() === 'win32' && <PanelView />}
       {isMobile && <MobilePanelView />}

@@ -75,7 +75,7 @@ const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
     return () => {
       window.removeEventListener('keydown', memoizeHandleKeyDown)
       window.removeEventListener('mousewheel', memoizeHandleMouseWheel)
-      selectRef?.current.removeEventListener('wheel', (event) => {
+      selectRef?.current?.removeEventListener('wheel', (event) => {
         event.preventDefault()
       })
     }

@@ -1,0 +1,30 @@
+.mobile_file-viewer {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  margin: 5px 0;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #0f111a;
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border: 1px solid #292d3e;
+    background-color: rgba(113, 124, 180, 0.1);
+  }
+
+  .mobile_files-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
