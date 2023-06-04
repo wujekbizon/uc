@@ -13,8 +13,18 @@ const SettingsModal = () => {
     closeSettingsModal()
   }
 
+  const onClickEnable = () => {
+    enableMobileLayout()
+    closeSettingsModal()
+  }
+
+  const onClickDisable = () => {
+    disableMobileLayout()
+    closeSettingsModal()
+  }
+
   return (
-    <aside className="settings-modal">
+    <aside className={isMobile ? 'mobile settings-modal' : 'settings-modal'}>
       <nav className="settings-nav">
         <h4>Settings</h4>
         <MdOutlineClose onClick={onHandleClick} className="icon" />
@@ -22,8 +32,8 @@ const SettingsModal = () => {
       <div className="settings-content">
         <div className="settings-item">
           <ImMobile className="icon" />
-          {!isMobile && <button onClick={() => enableMobileLayout()}>Enable Mobile Layout</button>}
-          {isMobile && <button onClick={() => disableMobileLayout()}>Disable Mobile Layout</button>}
+          {!isMobile && <button onClick={onClickEnable}>Enable Mobile Layout</button>}
+          {isMobile && <button onClick={onClickDisable}>Disable Mobile Layout</button>}
         </div>
       </div>
     </aside>
