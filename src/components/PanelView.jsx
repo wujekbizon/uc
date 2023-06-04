@@ -81,7 +81,11 @@ const PanelView = () => {
           {index !== viewData.length - 1 && <ViewerDivider />}
         </Fragment>
       ))}
-      {isViewFileModalOpen && <ViewFileModal selectedFile={selectedFile} />}
+      {isViewFileModalOpen && 
+      <ViewFileModal 
+        viewData={viewData[focusedPaneIndex]}
+        focusedPaneIndex={focusedPaneIndex}
+        selectedFile={selectedFile} />}
     </section>
   )
 }

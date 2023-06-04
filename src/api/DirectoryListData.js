@@ -67,7 +67,7 @@ export default class DirectoryListData {
    * @param {Number} sortMode - FILE_SORT_MODE_NAME (default) | FILE_SORT_MODE_EXT | FILE_SORT_MODE_SIZE | FILE_SORT_MODE_DATE
    */
   constructor(initialDirectory = process.cwd()) {
-    this._currentDirectory = initialDirectory
+    this.currentDirectory = initialDirectory
     this._entries = []
     this._selectedEntries = []
     this.sortDirection = SORT_ASCENDING
@@ -75,14 +75,16 @@ export default class DirectoryListData {
   }
 
   get currentDirectory() { return this._currentDirectory }
-  set currentDirectory(value) { this._currentDirectory = value }
+  set currentDirectory(value) {
+    // dirname returns input if input ends with \
+    // prevent \\ in path
+    this._currentDirectory = value.endsWith('\\') ? value.substring(0, value.length-1) : value
+  }
 
   traverse(entry) {
     // todo (@mribbons): support relative path, full path, split by dir sep
     // todo (@mribbons): navigate as far as possible even if final path doesn't exist
-    // dirname returns input if input ends with \
-    // prevent \\ in path
-    const cd = this.currentDirectory.endsWith('\\') ? this.currentDirectory.substring(0, this.currentDirectory.length-1) : this.currentDirectory
+    const cd = this.currentDirectory;
     if (entry === '..') {
       return new DirectoryListData(path.dirname(cd))
     } else if (entry.isDirectory()) {
@@ -161,4 +163,24 @@ export default class DirectoryListData {
 
   get selectedEntries() { return this._selectedEntries }
   set selectedEntries(value) { this._selectedEntries = value }
+
+  /**
+   * fullPath
+   * Returns the full path for an entry
+   * It is assumed that the entry was returned from this instance
+   * @param {any} entry
+   * @returns {String} - The full path to the file
+   */
+  fullPath (entry) {
+    return path.join(this._currentDirectory, entry.name)
+  }
+
+  /**
+   * getContents
+   * @param {any} entry - file entry supplied from this instance
+   * @returns {Promise<Buffer>} Buffer containing file data
+   */
+  async getContents (entry) {
+    return fs.readFile(this.fullPath(entry))
+  }
 }

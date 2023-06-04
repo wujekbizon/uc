@@ -66,7 +66,23 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: left;
+    justify-content: top;
+    overflow: scroll;
+    margin: 10px;
+
+    &::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #0f111a;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border: 1px solid #292d3e;
+      background: linear-gradient(189.97deg, #ae67fa 1.84%, #f49867 102.67%);
+    }
   }
 }
