@@ -1,10 +1,20 @@
 import './ViewFileModal.scss'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { MdOutlineClose } from 'react-icons/md'
 import { useActions } from '../hooks/useActions'
 
-const ViewFileModal = ({ selectedFile }) => {
+const ViewFileModal = ({ viewData, focusedPaneIndex, selectedFile }) => {
+  const [ contents, setContents ] = useState("")
   const { closeViewFileModal } = useActions()
+
+  useEffect(() => {
+    /* todo - This is slow on large files. Buffer data. 
+    Need to determine max width and height so scrollbars can be set properly without displaying entire file
+    */
+    viewData.getContents(selectedFile).then(buffer => {
+      setContents(buffer.toString())
+    })
+  }, [selectedFile])
 
   const onClickHandle = () => {
     closeViewFileModal()
@@ -14,7 +24,7 @@ const ViewFileModal = ({ selectedFile }) => {
       <header className="view-file_header">
         <div className="view-file_title">
           <h4>
-            <span>Viewer</span> - c:\..\..\{selectedFile.name}
+            <span>Viewer</span> - {focusedPaneIndex} - {viewData.fullPath(selectedFile)}
           </h4>
           <MdOutlineClose className="view-file_icon" onClick={onClickHandle} />
         </div>
@@ -31,8 +41,7 @@ const ViewFileModal = ({ selectedFile }) => {
         </nav>
       </header>
       <main className="view-file_main">
-        <h3>Full path..\{selectedFile.name}</h3>
-        <h3>Total space occupied: {selectedFile.size} bytes</h3>
+        <pre>{contents}</pre>
       </main>
     </aside>
   )
