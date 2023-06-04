@@ -40,7 +40,7 @@ const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
   const memoizeHandleMouseWheel = useMemo(() => {
     return (event) => {
       if (!focused) return
-      event.preventDefault()
+      // event.preventDefault()
 
       // Calculate the new cursor position based on the mouse wheel delta
       const cursorDelta = Math.sign(-1 * event.wheelDelta)

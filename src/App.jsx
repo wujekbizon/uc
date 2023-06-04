@@ -1,16 +1,18 @@
 import './App.scss'
-import React, { useEffect } from 'react'
-import { arch } from 'socket:os'
+import React from 'react'
+import { useSelector } from 'react-redux'
+
+// custom hooks
+import { useAppLoad } from './hooks/useAppLoad'
 
 // Components
-import { Commander } from './components'
+import { SplashScreen, Commander } from './components'
 
 const App = () => {
-  // Rendering title
-  useEffect(() => {
-    document.title = `Ultimate Commander (${arch()}) 1.0 - PreBuild`
-  }, [])
+  const { isLoading } = useSelector((state) => state.mobilePlatforms)
+  // Initial Loading
+  useAppLoad()
 
-  return <Commander />
+  return <>{isLoading ? <SplashScreen /> : <Commander />}</>
 }
 export default App

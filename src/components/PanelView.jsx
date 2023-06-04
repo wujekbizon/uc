@@ -38,9 +38,9 @@ const PanelView = () => {
           return focused
         })
       }
-      event.preventDefault()
       if (event.key === 'F3' && selectedFile) {
         openViewFileModal()
+        event.preventDefault()
       }
     }
   }, [directoryViewCount, openViewFileModal, selectedFile])
