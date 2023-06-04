@@ -25,6 +25,18 @@ const PanelView = () => {
   const { isViewFileModalOpen } = useSelector((state) => state.modals)
   const { openViewFileModal } = useActions()
 
+  const refreshPanes = (paneIndexes) => {
+    if (!Array.isArray(paneIndexes))
+      paneIndexes = [paneIndexes]
+
+    paneIndexes.forEach((viewerIndex) => {
+      setFileViewerData((viewData) => {
+        viewData[viewerIndex] = new DirectoryListData(viewData[viewerIndex].currentDirectory)
+        return [...viewData]
+      })
+    })
+  }
+
   // wrapping in useMemo so we can avoid unnecessary re-renders and improve the performance.
   const memoizeHandleKeyDown = useMemo(() => {
     return (event) => {
@@ -67,9 +79,9 @@ const PanelView = () => {
 
     // todo - copy file dialog, check if dest exists add (1) suffix
     // todo - chunked copy with progress dialog
-    const destPaneIndex = (focusedPaneIndex + 1) % 2
+    const destPaneIndex = (focusedPaneIndex + 1) % directoryViewCount
     if (await viewData[focusedPaneIndex].copyFile(selectedFile, viewData[destPaneIndex].currentDirectory)) {
-      // todo - refresh dest pane
+      refreshPanes(destPaneIndex)
     }
   }
 

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { MdOutlineClose } from 'react-icons/md'
 import { useActions } from '../hooks/useActions'
 
-const ViewFileModal = ({ viewData, focusedPaneIndex, selectedFile }) => {
+const ViewFileModal = ({ viewData, selectedFile }) => {
   const [ contents, setContents ] = useState("")
   const { closeViewFileModal } = useActions()
 
@@ -24,7 +24,7 @@ const ViewFileModal = ({ viewData, focusedPaneIndex, selectedFile }) => {
       <header className="view-file_header">
         <div className="view-file_title">
           <h4>
-            <span>Viewer</span> - {focusedPaneIndex} - {viewData.fullPath(selectedFile)}
+            <span>Viewer</span> - {viewData.fullPath(selectedFile)}
           </h4>
           <MdOutlineClose className="view-file_icon" onClick={onClickHandle} />
         </div>
