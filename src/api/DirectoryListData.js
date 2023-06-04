@@ -183,4 +183,33 @@ export default class DirectoryListData {
   async getContents (entry) {
     return fs.readFile(this.fullPath(entry))
   }
+
+  static async exists(path) {
+    try {
+      return (await fs.access(path)) !== undefined
+    } catch {}
+
+    return false
+  }
+
+  async copyFile(entry, destFolder) {
+    const srcPath = path.join(this.currentDirectory, entry.name)
+    const destPath = path.join(destFolder, entry.name)
+
+    console.log(`copy ${srcPath} => ${destPath}`)
+
+    if (await DirectoryListData.exists(destPath)) {
+      return false
+    }
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        await fs.writeFile(destPath, await fs.readFile(srcPath))
+        resolve(true)
+      } catch (e) {
+        console.log(`copy failed: ${e.message}`)
+        reject(e)
+      }
+    })
+  }
 }

@@ -38,12 +38,58 @@ const PanelView = () => {
           return focused
         })
       }
-      event.preventDefault()
-      if (event.key === 'F3' && selectedFile) {
-        openViewFileModal()
+      
+      let keyMap = {
+        'F3': openViewFileModal,
+        'F4': unhandledKey,
+        'F5': copyFile,
+        'F6': moveFile,
+        'F7': newFolder,
+        'F8': deleteFile
+      }
+
+      if (selectedFile) {
+        event.preventDefault()
+        if (keyMap[event.key] !== undefined) {
+          keyMap[event.key](event)
+        }
+        return false
       }
     }
   }, [directoryViewCount, openViewFileModal, selectedFile])
+
+  const unhandledKey = (event) => {
+    console.log(`key not yet implemented: ${event.key}`)
+  }
+
+  const copyFile = async (event) => {
+    if (selectedFile === '..') return
+
+    // todo - copy file dialog, check if dest exists add (1) suffix
+    // todo - chunked copy with progress dialog
+    const destPaneIndex = (focusedPaneIndex + 1) % 2
+    if (await viewData[focusedPaneIndex].copyFile(selectedFile, viewData[destPaneIndex].currentDirectory)) {
+      // todo - refresh dest pane
+    }
+  }
+
+  const moveFile = (event) => {
+    if (entry === '..') return
+    // todo - same dialog as copy file
+    // todo - refresh source, dest panes
+  }
+
+  const newFolder = (event) => {
+    // todo - folder name dialog
+    // todo - refresh current pane
+  }
+
+  const deleteFile = (event) => {
+    if (entry === '..') return
+    // todo - Are you sure dialog
+    // todo - delete to recycle/trash bin if shift not pressed
+    // todo - refresh current pane
+  }
 
   useEffect(() => {
     window.addEventListener('keydown', memoizeHandleKeyDown)
