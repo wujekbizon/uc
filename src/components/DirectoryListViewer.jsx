@@ -67,7 +67,7 @@ const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
       window.addEventListener('keydown', memoizeHandleKeyDown)
       window.addEventListener('mousewheel', memoizeHandleMouseWheel)
 
-      selectRef.current.addEventListener('wheel', (event) => {
+      selectRef?.current.addEventListener('wheel', (event) => {
         event.preventDefault()
       })
     }
@@ -75,7 +75,7 @@ const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
     return () => {
       window.removeEventListener('keydown', memoizeHandleKeyDown)
       window.removeEventListener('mousewheel', memoizeHandleMouseWheel)
-      selectRef.current.removeEventListener('wheel', (event) => {
+      selectRef?.current.removeEventListener('wheel', (event) => {
         event.preventDefault()
       })
     }

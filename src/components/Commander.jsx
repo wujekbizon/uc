@@ -12,10 +12,10 @@ const Commander = () => {
 
   return (
     <main className="commander">
-      <CommandBar />
+      {!isMobile && os.platform() === 'win32' && <CommandBar />}
       {!isMobile && os.platform() === 'win32' && <PanelView />}
       {isMobile && <MobilePanelView />}
-      <Taskbar />
+      {!isMobile && os.platform() === 'win32' && <Taskbar />}
     </main>
   )
 }

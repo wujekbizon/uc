@@ -15,7 +15,7 @@ const App = () => {
   // Initial Loading
   // As a parameter hook can accept loading time , by default is 3s
   // onLoadSuccess and onLoadError callbacks
-  useAppLoad(5000, loadAppSuccess, loadAppError)
+  useAppLoad(500, loadAppSuccess, loadAppError)
 
   return <>{isLoading ? <SplashScreen /> : <Commander />}</>
 }

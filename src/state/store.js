@@ -1,5 +1,13 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
-import { modalsReducer, openSubMenu, closeSubMenu, openViewFileModal, closeViewFileModal } from './slices/modalsSlice'
+import {
+  modalsReducer,
+  openSubMenu,
+  closeSubMenu,
+  openViewFileModal,
+  closeViewFileModal,
+  openSettingsModal,
+  closeSettingsModal,
+} from './slices/modalsSlice'
 import {
   mobilePlatformsReducer,
   enableMobileLayout,
@@ -23,6 +31,8 @@ export const actionCreators = {
   closeSubMenu,
   openViewFileModal,
   closeViewFileModal,
+  openSettingsModal,
+  closeSettingsModal,
   enableMobileLayout,
   disableMobileLayout,
   loadAppSuccess,

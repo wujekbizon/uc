@@ -10,6 +10,7 @@ import DirectoryEntry from './DirectoryEntry'
 import CommandBarSubMenu from './CommandBarSubMenu'
 import ViewFileModal from './ViewFileModal'
 import SplashScreen from './SplashScreen'
+import SettingsModal from './SettingsModal'
 
 export {
   CommandBar,
@@ -24,4 +25,5 @@ export {
   CommandBarSubMenu,
   ViewFileModal,
   SplashScreen,
+  SettingsModal,
 }
