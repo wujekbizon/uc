@@ -58,7 +58,7 @@ const CommandBar = () => {
       <div className="commandbar_list-container">
         <ul className="commandbar_list">
           {links.map(({ link }, index) => (
-            <li key={index} onMouseOver={displaySubmenu}>
+            <li id={`menu-link${index}`} key={index} onMouseOver={displaySubmenu}>
               {link}
             </li>
           ))}
