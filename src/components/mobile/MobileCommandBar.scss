@@ -1,6 +1,45 @@
 .mobile_command-bar {
   position: relative;
-  height: 30px;
+  height: 45px;
   width: 100%;
-  background-color: #292d3e;
+  background-color: #717cb480;
+  display: flex;
+  align-items: center;
+  border: 1px solid #090b10;
+
+  .mobile-menu {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .mobile-logo {
+      display: flex;
+      align-items: center;
+      margin-left: 15px;
+
+      h3 {
+        font-size: 22px;
+        margin-left: 10px;
+        background: linear-gradient(89.97deg, #ae67fa 1.84%, #f49867 102.67%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        -webkit-text-stroke-width: 0.5px;
+        -webkit-text-stroke-color: #090b10;
+      }
+    }
+
+    .mobile-icons {
+      display: flex;
+      align-items: center;
+      margin-right: 15px;
+
+      .icon {
+        cursor: pointer;
+        font-size: 25px;
+        margin-right: 10px;
+      }
+    }
+  }
 }

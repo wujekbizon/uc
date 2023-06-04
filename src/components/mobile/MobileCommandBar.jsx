@@ -10,7 +10,7 @@ import { SettingsModal } from '../index'
 
 const MobileCommandBar = () => {
   const { isSettingsModalOpen } = useSelector((state) => state.modals)
-  const { openSettingsModal, closeSettingsModal } = useActions()
+  const { openSettingsModal } = useActions()
 
   const onHandleClick = () => {
     openSettingsModal()
@@ -18,9 +18,14 @@ const MobileCommandBar = () => {
 
   return (
     <header className="mobile_command-bar">
-      <nav>
-        <FcSettings className="icon" onClick={onHandleClick} />
-        <GiHamburgerMenu />
+      <nav className="mobile-menu">
+        <div className="mobile-logo">
+          <h3>Ultimate Commander</h3>
+        </div>
+        <div className="mobile-icons">
+          <GiHamburgerMenu className="icon" />
+          <FcSettings className="icon" onClick={onHandleClick} />
+        </div>
       </nav>
       {isSettingsModalOpen && <SettingsModal />}
     </header>
