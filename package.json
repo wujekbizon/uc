@@ -1,7 +1,7 @@
 {
   "name": "uc",
   "version": "1.0.0",
-  "description": "",
+  "description": "The ultimate graphical shell commander solution.",
   "main": "index.js",
   "scripts": {
     "test": "ssc build -r -o --test=./test/index.js --headless",
