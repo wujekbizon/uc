@@ -104,9 +104,12 @@ const PanelView = () => {
     }
   }
 
-  const newFolder = (event) => {
-    // todo - folder name dialog
+  const newFolder = async (event) => {
+    // todo - folder name dialog, takes current entry as starting point for new folder name, all text selected for easy overwrite
     // todo - refresh current pane
+    if (await viewData[focusedPaneIndex].newFolder('new\\path')) {
+      refreshPanes(focusedPaneIndex)
+    }
   }
 
   const deleteFile = async (event) => {

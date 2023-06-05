@@ -186,10 +186,10 @@ export default class DirectoryListData {
 
   static async exists(path) {
     try {
-      return (await fs.access(path)) !== undefined
-    } catch {}
-
-    return false
+      return fs.stat(path)
+    } catch (_) {
+      return undefined
+    }
   }
 
   async copyFile(entry, destFolder) {
@@ -249,6 +249,34 @@ export default class DirectoryListData {
         resolve(true)
       } catch (e) {
         console.log(`delete failed: ${e.message}`)
+        reject(e)
+      }
+    })
+  }
+
+  static async mkdir(folder) {
+    if (await DirectoryListData.exists(folder)) {
+      return
+    } else {
+      await DirectoryListData.mkdir(await path.dirname(folder))
+      await fs.mkdir(folder)
+    }
+  }
+
+  async newFolder(name) {
+    // calling fs.stat on a subfolder that doesn't exist doesn't return false, check each supplied path one by one
+    const parts = name.split(path.sep)
+    let newPath = path.join(this.currentDirectory)
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        for (let p = 0; p < parts.length; ++p) {
+          newPath = path.join(this.currentDirectory, parts[p])
+          DirectoryListData.mkdir(newPath)
+        }
+        resolve(true)
+      } catch (e) {
+        console.log(`newFolder failed: ${e.message}`)
         reject(e)
       }
     })
