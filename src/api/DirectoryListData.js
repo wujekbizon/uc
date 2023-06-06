@@ -183,4 +183,102 @@ export default class DirectoryListData {
   async getContents (entry) {
     return fs.readFile(this.fullPath(entry))
   }
+
+  static async exists(path) {
+    try {
+      return fs.stat(path)
+    } catch (_) {
+      return undefined
+    }
+  }
+
+  async copyFile(entry, destFolder) {
+    // todo - recursive copy
+    const srcPath = path.join(this.currentDirectory, entry.name)
+    const destPath = path.join(destFolder, entry.name)
+
+    console.log(`copy ${srcPath} => ${destPath}`)
+
+    if (await DirectoryListData.exists(destPath)) {
+      return false
+    }
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        await fs.writeFile(destPath, await fs.readFile(srcPath))
+        resolve(true)
+      } catch (e) {
+        console.log(`copy failed: ${e.message}`)
+        reject(e)
+      }
+    })
+  }
+
+  async moveFile(entry, destFolder) {
+    const srcPath = path.join(this.currentDirectory, entry.name)
+    const destPath = path.join(destFolder, entry.name)
+
+    console.log(`rename ${srcPath} => ${destPath}`)
+    console.log(`WARNING - fs.rename not implemented`)
+
+    if (await DirectoryListData.exists(destPath)) {
+      return false
+    }
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        await fs.rename(srcPath, destPath)
+        resolve(true)
+      } catch (e) {
+        console.log(`rename failed: ${e.message}`)
+        reject(e)
+      }
+    })
+  }
+
+  async deleteFile(entry) {
+    // todo - recursive delete
+    const srcPath = path.join(this.currentDirectory, entry.name)
+
+    console.log(`rm ${srcPath} => ${destPath}`)
+    console.log(`WARNING - fs.rm not implemented`)
+    
+    return new Promise(async (resolve, reject) => {
+      try {
+        await fs.rm(srcPath)
+        resolve(true)
+      } catch (e) {
+        console.log(`delete failed: ${e.message}`)
+        reject(e)
+      }
+    })
+  }
+
+  static async mkdir(folder) {
+    if (await DirectoryListData.exists(folder)) {
+      return
+    } else {
+      await DirectoryListData.mkdir(await path.dirname(folder))
+      await fs.mkdir(folder)
+    }
+  }
+
+  async newFolder(name) {
+    // calling fs.stat on a subfolder that doesn't exist doesn't return false, check each supplied path one by one
+    const parts = name.split(path.sep)
+    let newPath = path.join(this.currentDirectory)
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        for (let p = 0; p < parts.length; ++p) {
+          newPath = path.join(this.currentDirectory, parts[p])
+          DirectoryListData.mkdir(newPath)
+        }
+        resolve(true)
+      } catch (e) {
+        console.log(`newFolder failed: ${e.message}`)
+        reject(e)
+      }
+    })
+  }
 }
