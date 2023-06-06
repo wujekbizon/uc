@@ -169,7 +169,7 @@ const enableSocketReload = async (opts = {}) => {
     }
 
     window.addEventListener('keydown', (event) => {
-      if (((event.ctrlKey || event.metaKey) && event.key === 'r') || event.key === 'F5') {
+      if (((event.ctrlKey || event.metaKey) && event.key === 'r')) {
         event.preventDefault()
         reload()
       }
