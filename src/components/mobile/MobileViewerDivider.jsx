@@ -1,13 +1,13 @@
-import './ViewerDivider.scss'
+import './MobileViewerDivider.scss'
 import React, { useState } from 'react'
-import { dividerItems } from '../data/dividerLinks'
 import { useSelector } from 'react-redux'
-import { useActions } from '../hooks/useActions'
+import { dividerItems } from '../../data/dividerLinks'
+import { useActions } from '../../hooks/useActions'
 
 // Components
-import { SettingsModal } from './index'
+import { SettingsModal } from '../index'
 
-const ViewerDivider = () => {
+const MobileViewerDivider = () => {
   const { isSettingsModalOpen } = useSelector((state) => state.modals)
   const { openSettingsModal } = useActions()
   const [active, setActive] = useState(null)
@@ -35,19 +35,18 @@ const ViewerDivider = () => {
   }
 
   return (
-    <div className="divider">
-      <div>
-        {dividerItems.map(({ icon, text, id }, index) => (
-          <div className={active === index + 1 ? 'icon-container active' : 'icon-container'} key={id}>
-            <div className="icon" onClick={() => onHandleFilesManipulation(text, id)}>
-              {icon}
-            </div>
-            <span className="icon-text">{text}</span>
+    <div className="mobile_divider">
+      {dividerItems.map(({ icon, text, id }, index) => (
+        <div className={active === index + 1 ? 'icon-container active' : 'icon-container'} key={id}>
+          <div className="icon" onClick={() => onHandleFilesManipulation(text, id)}>
+            {icon}
           </div>
-        ))}
-      </div>
+          <span className="icon-text">{text}</span>
+        </div>
+      ))}
+
       {isSettingsModalOpen && <SettingsModal />}
     </div>
   )
 }
-export default ViewerDivider
+export default MobileViewerDivider

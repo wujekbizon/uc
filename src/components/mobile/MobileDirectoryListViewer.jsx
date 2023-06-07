@@ -1,11 +1,10 @@
-import './DirectoryListViewer.scss'
+import './MobileDirectoryListViewer.scss'
 import React, { useEffect, useState, useMemo } from 'react'
 // custom hooks
-import { useSmoothScroll } from '../hooks/useSmoothScroll'
-
+import { useSmoothScroll } from '../../hooks/useSmoothScroll'
 // Components
-import { DirectoryListViewerBar, DirectoryEntry } from './index'
-import DirectoryListData, { FILE_SORT_MODE_DATE, SORT_DESCENDING } from '../api/DirectoryListData'
+import { DirectoryEntry } from '../index'
+import DirectoryListData, { FILE_SORT_MODE_DATE, SORT_DESCENDING } from '../../api/DirectoryListData'
 
 /**
  *
@@ -13,13 +12,11 @@ import DirectoryListData, { FILE_SORT_MODE_DATE, SORT_DESCENDING } from '../api/
  * @returns
  */
 
-const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
+const MobileDirectoryListViewer = ({ data, focused, onEntryCallback }) => {
   const [entries, setEntries] = useState(['[..]'])
   const [cursorOver, setCursorOver] = useState(0)
   const { selectRef, debouncedScroll } = useSmoothScroll('.file-cursor-over', 20)
 
-  // useMemo will memoize the function and recalculate it only when either `focused`,`entries.length` or
-  // `debouncedScroll` change, so we can avoid unnecessary re-renders and improve the performance.
   const memoizeHandleKeyDown = useMemo(() => {
     return (event) => {
       if (!focused) return
@@ -58,7 +55,6 @@ const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
   useEffect(() => {
     data.refresh(FILE_SORT_MODE_DATE, SORT_DESCENDING).then(() => {
       setEntries(() => ['..', ...data._entries])
-      setCursorOver(0)
     })
   }, [data])
 
@@ -82,9 +78,8 @@ const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
   }, [memoizeHandleKeyDown, focused, memoizeHandleMouseWheel])
 
   return (
-    <section className="file-viewer">
-      <DirectoryListViewerBar />
-      <div className="files-container" ref={selectRef}>
+    <section className="mobile_file-viewer">
+      <div className="mobile_files-container" ref={selectRef}>
         {entries.map((entry, k) => (
           <DirectoryEntry
             key={k}
@@ -98,4 +93,4 @@ const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
     </section>
   )
 }
-export default DirectoryListViewer
+export default MobileDirectoryListViewer

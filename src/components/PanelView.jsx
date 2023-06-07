@@ -30,8 +30,7 @@ const PanelView = () => {
   }
 
   const refreshPanes = (paneIndexes) => {
-    if (!Array.isArray(paneIndexes))
-      paneIndexes = [paneIndexes]
+    if (!Array.isArray(paneIndexes)) paneIndexes = [paneIndexes]
 
     paneIndexes.forEach((viewerIndex) => {
       setFileViewerData((viewData) => {
@@ -40,7 +39,7 @@ const PanelView = () => {
       })
     })
   }
-  
+
   // get the index of the next unfocused pane
   const getOppositePaneIndex = () => {
     return (focusedPaneIndex + 1) % directoryViewCount
@@ -59,14 +58,14 @@ const PanelView = () => {
           return focused
         })
       }
-      
+
       let keyMap = {
-        'F3': openViewFileModal,
-        'F4': unhandledKey,
-        'F5': copyFile,
-        'F6': moveFile,
-        'F7': newFolder,
-        'F8': deleteFile
+        F3: openViewFileModal,
+        F4: unhandledKey,
+        F5: copyFile,
+        F6: moveFile,
+        F7: newFolder,
+        F8: deleteFile,
       }
 
       if (selectedFile) {
@@ -158,11 +157,13 @@ const PanelView = () => {
           {index !== viewData.length - 1 && <ViewerDivider />}
         </Fragment>
       ))}
-      {isViewFileModalOpen && 
-      <ViewFileModal 
-        viewData={viewData[focusedPaneIndex]}
-        focusedPaneIndex={focusedPaneIndex}
-        selectedFile={selectedFile} />}
+      {isViewFileModalOpen && (
+        <ViewFileModal
+          viewData={viewData[focusedPaneIndex]}
+          focusedPaneIndex={focusedPaneIndex}
+          selectedFile={selectedFile}
+        />
+      )}
     </section>
   )
 }

@@ -1,16 +1,22 @@
 import './App.scss'
-import React, { useEffect } from 'react'
-import { arch } from 'socket:os'
+import React from 'react'
+import { useSelector } from 'react-redux'
+
+// custom hooks
+import { useAppLoad } from './hooks/useAppLoad'
+import { useActions } from './hooks/useActions'
 
 // Components
-import { Commander } from './components'
+import { SplashScreen, Commander } from './components'
 
 const App = () => {
-  // Rendering title
-  useEffect(() => {
-    document.title = `Ultimate Commander (${arch()}) 1.0 - PreBuild`
-  }, [])
+  const { isLoading } = useSelector((state) => state.mobilePlatforms)
+  const { loadAppError, loadAppSuccess } = useActions()
+  // Initial Loading
+  // As a parameter hook can accept loading time , by default is 3s
+  // onLoadSuccess and onLoadError callbacks
+  useAppLoad(500, loadAppSuccess, loadAppError)
 
-  return <Commander />
+  return <>{isLoading ? <SplashScreen /> : <Commander />}</>
 }
 export default App
