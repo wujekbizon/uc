@@ -15,11 +15,13 @@ import {
   loadAppSuccess,
   loadAppError,
 } from './slices/mobilePlatformsSlice'
+import { fileExplorerReducer, toggleFocus, setSelectedFile } from './slices/fileExplorer'
 
 export const store = configureStore({
   reducer: {
     modals: modalsReducer,
     mobilePlatforms: mobilePlatformsReducer,
+    fileExplorers: fileExplorerReducer,
   },
   middleware: getDefaultMiddleware({
     serializableCheck: false,
@@ -37,4 +39,6 @@ export const actionCreators = {
   disableMobileLayout,
   loadAppSuccess,
   loadAppError,
+  toggleFocus,
+  setSelectedFile,
 }

@@ -18,12 +18,10 @@ const initFileViewerData = (n) => {
 }
 
 const PanelView = () => {
-  const directoryViewCount = 2
-  const [focusedPaneIndex, setFocusedPaneIndex] = useState(0)
-  const [viewData, setFileViewerData] = useState(initFileViewerData(directoryViewCount))
-  const [selectedFile, setSelectedFile] = useState(null)
+  const { focusedPaneIndex, selectedFile, directoryViewCount } = useSelector((state) => state.fileExplorers)
   const { isViewFileModalOpen } = useSelector((state) => state.modals)
-  const { openViewFileModal } = useActions()
+  const { openViewFileModal, toggleFocus, setSelectedFile } = useActions()
+  const [viewData, setFileViewerData] = useState(initFileViewerData(directoryViewCount))
   const allPanes = []
   for (let x = 0; x < directoryViewCount; ++x) {
     allPanes.push(x)
@@ -50,13 +48,8 @@ const PanelView = () => {
     return (event) => {
       if (event.key === 'Tab') {
         event.preventDefault()
-        setFocusedPaneIndex((focused) => {
-          focused++
-          if (focused >= directoryViewCount) {
-            focused = 0
-          }
-          return focused
-        })
+        const nextIndex = focusedPaneIndex === 0 ? 1 : 0
+        toggleFocus(nextIndex)
       }
 
       let keyMap = {
@@ -76,7 +69,7 @@ const PanelView = () => {
         return false
       }
     }
-  }, [directoryViewCount, openViewFileModal, selectedFile])
+  }, [directoryViewCount, openViewFileModal, selectedFile, toggleFocus, focusedPaneIndex])
 
   const unhandledKey = (event) => {
     console.log(`key not yet implemented: ${event.key}`)
@@ -144,6 +137,7 @@ const PanelView = () => {
       return [...viewData]
     })
   }
+
   return (
     <section className="panel-view">
       {viewData.map((data, index) => (
@@ -157,13 +151,7 @@ const PanelView = () => {
           {index !== viewData.length - 1 && <ViewerDivider />}
         </Fragment>
       ))}
-      {isViewFileModalOpen && (
-        <ViewFileModal
-          viewData={viewData[focusedPaneIndex]}
-          focusedPaneIndex={focusedPaneIndex}
-          selectedFile={selectedFile}
-        />
-      )}
+      {isViewFileModalOpen && <ViewFileModal viewData={viewData[focusedPaneIndex]} />}
     </section>
   )
 }
