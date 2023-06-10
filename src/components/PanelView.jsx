@@ -132,7 +132,7 @@ const PanelView = () => {
             data={data}
             index={index}
             focused={focusedPaneIndex === index}
-            onEntryCallback={(entry) => onEntryAction(index, entry)}
+            // onEntryCallback={(entry) => onEntryAction(focusedPaneIndex, entry)}
           />
           {index !== directoryListData.length - 1 && <ViewerDivider />}
         </Fragment>

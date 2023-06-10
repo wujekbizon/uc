@@ -91,7 +91,7 @@ const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
             index={k}
             entry={entry}
             cursor_over={focused && k === cursorOver}
-            onEntryCallback={onEntryCallback}
+            // onEntryCallback={onEntryCallback}
           />
         ))}
       </div>
