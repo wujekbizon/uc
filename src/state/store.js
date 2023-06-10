@@ -16,12 +16,14 @@ import {
   loadAppError,
 } from './slices/mobilePlatformsSlice'
 import { fileExplorerReducer, toggleFocus, setSelectedFile } from './slices/fileExplorer'
+import { directoryListReducer, addDirectoryToList, fetchDirectoryList } from './slices/directoryList'
 
 export const store = configureStore({
   reducer: {
     modals: modalsReducer,
     mobilePlatforms: mobilePlatformsReducer,
     fileExplorers: fileExplorerReducer,
+    directoryListsData: directoryListReducer,
   },
   middleware: getDefaultMiddleware({
     serializableCheck: false,
@@ -41,4 +43,6 @@ export const actionCreators = {
   loadAppError,
   toggleFocus,
   setSelectedFile,
+  addDirectoryToList,
+  fetchDirectoryList,
 }

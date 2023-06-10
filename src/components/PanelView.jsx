@@ -1,27 +1,23 @@
 import './PanelView.scss'
-import React, { useEffect, useState, useMemo, Fragment } from 'react'
+import React, { useEffect, useMemo, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { useActions } from '../hooks/useActions'
-
+import { traverseDirectory } from '../helpers/fileSystem'
 // Components
 import { ViewerDivider, DirectoryListViewer, ViewFileModal } from './index'
 import DirectoryListData from '../api/DirectoryListData'
 
-// todo: provide list of starting directories from saved state
-const initFileViewerData = (n) => {
-  let a = []
-  while (a.length < n) {
-    a.push(new DirectoryListData())
-  }
-
-  return a
-}
-
 const PanelView = () => {
   const { focusedPaneIndex, selectedFile, directoryViewCount } = useSelector((state) => state.fileExplorers)
+  const { directoryListData } = useSelector((state) => state.directoryListsData)
   const { isViewFileModalOpen } = useSelector((state) => state.modals)
-  const { openViewFileModal, toggleFocus, setSelectedFile } = useActions()
-  const [viewData, setFileViewerData] = useState(initFileViewerData(directoryViewCount))
+  const { openViewFileModal, toggleFocus, setSelectedFile, fetchDirectoryList, addDirectoryToList } = useActions()
+
+  // fetching a list of data whenever directoryListData or directoryViewCount change
+  useEffect(() => {
+    fetchDirectoryList(directoryViewCount)
+  }, [directoryViewCount])
+
   const allPanes = []
   for (let x = 0; x < directoryViewCount; ++x) {
     allPanes.push(x)
@@ -124,23 +120,16 @@ const PanelView = () => {
 
   const onEntryAction = (viewerIndex, entry) => {
     if (entry === '..' || entry.isDirectory()) {
-      traverseDirectory(viewerIndex, entry)
+      const newDirectory = traverseDirectory(viewerIndex, entry, directoryListData)
+      addDirectoryToList(newDirectory)
     } else {
       setSelectedFile(entry)
     }
   }
 
-  const traverseDirectory = (viewerIndex, entry) => {
-    // todo - path history
-    setFileViewerData((viewData) => {
-      viewData[viewerIndex] = viewData[viewerIndex].traverse(entry)
-      return [...viewData]
-    })
-  }
-
   return (
     <section className="panel-view">
-      {viewData.map((data, index) => (
+      {directoryListData?.map((data, index) => (
         <Fragment key={index}>
           <DirectoryListViewer
             data={data}
@@ -148,10 +137,10 @@ const PanelView = () => {
             focused={focusedPaneIndex === index}
             onEntryCallback={(entry) => onEntryAction(index, entry)}
           />
-          {index !== viewData.length - 1 && <ViewerDivider />}
+          {index !== directoryListData.length - 1 && <ViewerDivider />}
         </Fragment>
       ))}
-      {isViewFileModalOpen && <ViewFileModal viewData={viewData[focusedPaneIndex]} />}
+      {isViewFileModalOpen && <ViewFileModal viewData={directoryListData[focusedPaneIndex]} />}
     </section>
   )
 }
