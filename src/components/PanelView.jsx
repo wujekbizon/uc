@@ -1,5 +1,5 @@
 import './PanelView.scss'
-import React, { useEffect, useMemo, Fragment } from 'react'
+import React, { useEffect, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { useActions } from '../hooks/useActions'
 import { traverseDirectory } from '../helpers/fileSystem'
@@ -21,11 +21,27 @@ const PanelView = () => {
     fetchDirectoryList(directoryViewCount)
   }, [directoryViewCount])
 
+  // const allPanes = []
+  // for (let x = 0; x < directoryViewCount; ++x) {
+  //   allPanes.push(x)
+  // }
+
+  // const refreshPanes = (paneIndexes) => {
+  //   if (!Array.isArray(paneIndexes)) paneIndexes = [paneIndexes]
+  //   paneIndexes.forEach((viewerIndex) => {
+  //     setFileViewerData((viewData) => {
+  //       viewData[viewerIndex] = new DirectoryListData(viewData[viewerIndex].currentDirectory)
+  //       return [...viewData]
+  //     })
+  //   })
+  // }
+
   const togglePanes = (event) => {
     event.preventDefault()
     const nextIndex = focusedPaneIndex === 0 ? 1 : 0
     toggleFocus(nextIndex)
   }
+
   const copyFile = async (event) => {
     if (selectedFile === '..') return
 
@@ -41,21 +57,6 @@ const PanelView = () => {
       refreshPanes(destPaneIndex)
     }
   }
-
-  // const allPanes = []
-  // for (let x = 0; x < directoryViewCount; ++x) {
-  //   allPanes.push(x)
-  // }
-
-  // const refreshPanes = (paneIndexes) => {
-  //   if (!Array.isArray(paneIndexes)) paneIndexes = [paneIndexes]
-  //   paneIndexes.forEach((viewerIndex) => {
-  //     setFileViewerData((viewData) => {
-  //       viewData[viewerIndex] = new DirectoryListData(viewData[viewerIndex].currentDirectory)
-  //       return [...viewData]
-  //     })
-  //   })
-  // }
 
   // get the index of the next unfocused pane
   const getOppositePaneIndex = () => {
@@ -110,7 +111,9 @@ const PanelView = () => {
     F7: newFolder,
     F8: deleteFile,
   }
-  useKeyboardEvents(keyHandlers, [togglePanes, copyFile])
+  // passing fn names into dependencies array inside useMemo,
+  // we can think later about moving all of this fn calls into redux
+  useKeyboardEvents(keyHandlers, [togglePanes, unhandledKey, copyFile, moveFile, newFolder, deleteFile])
 
   const onEntryAction = (viewerIndex, entry) => {
     if (entry === '..' || entry.isDirectory()) {
