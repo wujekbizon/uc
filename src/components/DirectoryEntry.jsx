@@ -8,7 +8,6 @@ import { ImArrowUp } from 'react-icons/im'
 // Components
 import fs from 'socket:fs/promises'
 import { traverseDirectory } from '../helpers/fileSystem'
-import { setFocus } from '../state/slices/fileExplorer'
 
 /**
  * File Entry
@@ -16,10 +15,11 @@ import { setFocus } from '../state/slices/fileExplorer'
  * @param {fs.Dirent|String} entry - File entry or '..'
  */
 
-const DirectoryEntry = ({ index, entry, cursor_over }) => {
-  const { focusedPaneIndex } = useSelector((state) => state.fileExplorers)
+const DirectoryEntry = ({ paneIndex, entry, cursor_over, onEntryCallback }) => {
+  const { focusedPaneIndex, cursorOver } = useSelector((state) => state.fileExplorers)
   const { directoryListData } = useSelector((state) => state.directoryListsData)
   const { setSelectedFile, addDirectoryToList } = useActions()
+
   const onEntryAction = (viewerIndex, entry) => {
     if (entry === '..' || entry.isDirectory()) {
       const newDirectory = traverseDirectory(viewerIndex, entry, directoryListData)
@@ -30,11 +30,11 @@ const DirectoryEntry = ({ index, entry, cursor_over }) => {
   }
 
   const onHandleClick = () => {
-    onEntryAction(focusedPaneIndex, entry)
+    onEntryAction(paneIndex, entry)
   }
 
   const stateCss = () => {
-    return `file-container ${cursor_over ? ' file-cursor-over' : ''}${entry.selected ? ' file-selected' : ''}`
+    return `file-container ${cursor_over ? 'file-cursor-over' : ''}${entry.selected ? 'file-selected' : ''}`
   }
 
   return (

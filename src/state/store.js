@@ -15,7 +15,16 @@ import {
   loadAppSuccess,
   loadAppError,
 } from './slices/mobilePlatformsSlice'
-import { fileExplorerReducer, toggleFocus, setSelectedFile, setFocus } from './slices/fileExplorer'
+import {
+  fileExplorerReducer,
+  toggleFocus,
+  setSelectedFile,
+  setFocus,
+  setEntries,
+  updateCursorPosition,
+  updateScrollCursorPosition,
+  getOppositePaneIndex,
+} from './slices/fileExplorer'
 import { directoryListReducer, addDirectoryToList, fetchDirectoryList } from './slices/directoryList'
 
 export const store = configureStore({
@@ -46,4 +55,8 @@ export const actionCreators = {
   setFocus,
   addDirectoryToList,
   fetchDirectoryList,
+  setEntries,
+  updateCursorPosition,
+  updateScrollCursorPosition,
+  getOppositePaneIndex,
 }

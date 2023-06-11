@@ -2,18 +2,18 @@ import './PanelView.scss'
 import React, { useEffect, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { useActions } from '../hooks/useActions'
-import { traverseDirectory } from '../helpers/fileSystem'
 import { refreshPanes } from '../state/apiCalls'
 // Components
 import { ViewerDivider, DirectoryListViewer, ViewFileModal } from './index'
 import { useKeyboardEvents } from '../hooks/useKeyboardEvents'
-import DirectoryListData from '../api/DirectoryListData'
 
 const PanelView = () => {
-  const { focusedPaneIndex, selectedFile, directoryViewCount } = useSelector((state) => state.fileExplorers)
+  const { focusedPaneIndex, selectedFile, directoryViewCount, oppositePaneIndex } = useSelector(
+    (state) => state.fileExplorers
+  )
   const { directoryListData } = useSelector((state) => state.directoryListsData)
   const { isViewFileModalOpen } = useSelector((state) => state.modals)
-  const { openViewFileModal, toggleFocus, setSelectedFile, fetchDirectoryList, addDirectoryToList } = useActions()
+  const { openViewFileModal, toggleFocus, fetchDirectoryList, getOppositePaneIndex } = useActions()
 
   // effects
   useEffect(() => {
@@ -21,46 +21,31 @@ const PanelView = () => {
     fetchDirectoryList(directoryViewCount)
   }, [directoryViewCount])
 
-  // const allPanes = []
-  // for (let x = 0; x < directoryViewCount; ++x) {
-  //   allPanes.push(x)
-  // }
-
-  // const refreshPanes = (paneIndexes) => {
-  //   if (!Array.isArray(paneIndexes)) paneIndexes = [paneIndexes]
-  //   paneIndexes.forEach((viewerIndex) => {
-  //     setFileViewerData((viewData) => {
-  //       viewData[viewerIndex] = new DirectoryListData(viewData[viewerIndex].currentDirectory)
-  //       return [...viewData]
-  //     })
-  //   })
-  // }
+  useEffect(() => {
+    // we need to run this by Redux to avoid any strange behaviors
+    // so everytime we change panes we will get opposite index and update
+    // the state
+    getOppositePaneIndex()
+  }, [focusedPaneIndex])
 
   const togglePanes = (event) => {
     event.preventDefault()
-    const nextIndex = focusedPaneIndex === 0 ? 1 : 0
+    const nextIndex = (focusedPaneIndex + 1) % directoryViewCount
     toggleFocus(nextIndex)
   }
 
   const copyFile = async (event) => {
     if (selectedFile === '..') return
-
     // todo - copy file dialog, check if dest exists add (1) suffix
     // todo - chunked copy with progress dialog
-    const destPaneIndex = getOppositePaneIndex()
     if (
       await directoryListData[focusedPaneIndex].copyFile(
         selectedFile,
-        directoryListData[destPaneIndex].currentDirectory
+        directoryListData[oppositePaneIndex].currentDirectory
       )
     ) {
-      refreshPanes(destPaneIndex)
+      refreshPanes(oppositePaneIndex)
     }
-  }
-
-  // get the index of the next unfocused pane
-  const getOppositePaneIndex = () => {
-    return (focusedPaneIndex + 1) % directoryViewCount
   }
 
   const unhandledKey = (event) => {
@@ -71,11 +56,10 @@ const PanelView = () => {
     if (selectedFile === '..') return
     // todo - same dialog as copy file
     // todo - refresh source, dest panes
-    const destPaneIndex = getOppositePaneIndex()
     if (
       await directoryListData[focusedPaneIndex].moveFile(
         selectedFile,
-        directoryListData[destPaneIndex].currentDirectory
+        directoryListData[oppositePaneIndex].currentDirectory
       )
     ) {
       // refreshPanes(allPanes)
@@ -115,28 +99,16 @@ const PanelView = () => {
   // we can think later about moving all of this fn calls into redux
   useKeyboardEvents(keyHandlers, [togglePanes, unhandledKey, copyFile, moveFile, newFolder, deleteFile])
 
-  const onEntryAction = (viewerIndex, entry) => {
-    if (entry === '..' || entry.isDirectory()) {
-      const newDirectory = traverseDirectory(viewerIndex, entry, directoryListData)
-      addDirectoryToList(newDirectory)
-    } else {
-      setSelectedFile(entry)
-    }
-  }
-
   return (
     <section className="panel-view">
-      {directoryListData?.map((data, index) => (
-        <Fragment key={index}>
-          <DirectoryListViewer
-            data={data}
-            index={index}
-            focused={focusedPaneIndex === index}
-            // onEntryCallback={(entry) => onEntryAction(focusedPaneIndex, entry)}
-          />
-          {index !== directoryListData.length - 1 && <ViewerDivider />}
-        </Fragment>
-      ))}
+      {directoryListData?.map((data, index) => {
+        return (
+          <Fragment key={index}>
+            <DirectoryListViewer data={data} focused={focusedPaneIndex === index} paneIndex={index} />
+            {index !== directoryListData.length - 1 && <ViewerDivider />}
+          </Fragment>
+        )
+      })}
       {isViewFileModalOpen && <ViewFileModal viewData={directoryListData[focusedPaneIndex]} />}
     </section>
   )

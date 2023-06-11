@@ -1,7 +1,9 @@
 import './DirectoryListViewer.scss'
 import React, { useEffect, useState, useMemo } from 'react'
+import { useSelector } from 'react-redux'
 // custom hooks
 import { useSmoothScroll } from '../hooks/useSmoothScroll'
+import { useActions } from '../hooks/useActions'
 
 // Components
 import { DirectoryListViewerBar, DirectoryEntry } from './index'
@@ -13,59 +15,38 @@ import DirectoryListData, { FILE_SORT_MODE_DATE, SORT_DESCENDING } from '../api/
  * @returns
  */
 
-const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
-  const [entries, setEntries] = useState(['[..]'])
-  const [cursorOver, setCursorOver] = useState(0)
+const DirectoryListViewer = ({ data, focused, onEntryCallback, paneIndex }) => {
+  const { cursorOver } = useSelector((state) => state.fileExplorers)
+  const { updateCursorPosition, updateScrollCursorPosition } = useActions()
   const { selectRef, debouncedScroll } = useSmoothScroll('.file-cursor-over', 20)
+  const [entries, setEntries] = useState(['[..]'])
 
-  // useMemo will memoize the function and recalculate it only when either `focused`,`entries.length` or
-  // `debouncedScroll` change, so we can avoid unnecessary re-renders and improve the performance.
-  const memoizeHandleKeyDown = useMemo(() => {
-    return (event) => {
+  const memoizeHandlers = useMemo(() => {
+    const handleKeyDown = (event) => {
       if (!focused) return
-
       if (event.key === 'ArrowUp') {
         event.preventDefault()
-        setCursorOver((prevCursor) => Math.max(prevCursor - 1, 0))
+        updateCursorPosition({ direction: 'UP', entries })
       }
       if (event.key === 'ArrowDown') {
         event.preventDefault()
-        setCursorOver((prevCursor) => Math.min(prevCursor + 1, entries.length - 1))
+        updateCursorPosition({ direction: 'DOWN', entries })
       }
-      // calling debouncedScroll fn
       debouncedScroll()
     }
-  }, [focused, entries.length, debouncedScroll])
-
-  const memoizeHandleMouseWheel = useMemo(() => {
-    return (event) => {
+    const handleMouseWheel = (event) => {
       if (!focused) return
-      // event.preventDefault()
-
-      // Calculate the new cursor position based on the mouse wheel delta
-      const cursorDelta = Math.sign(-1 * event.wheelDelta)
-      setCursorOver((prevCursor) => {
-        const minCursor = 0
-        const maxCursor = entries.length - 1
-        const newCursor = Math.max(Math.min(prevCursor + cursorDelta, maxCursor), minCursor)
-        // calling debouncedScroll fn
-        debouncedScroll()
-        return newCursor
-      })
+      updateScrollCursorPosition({ cursorDelta: Math.sign(-1 * event.wheelDelta), entries })
+      debouncedScroll()
     }
-  }, [focused, entries.length, debouncedScroll])
+    return { handleKeyDown, handleMouseWheel }
+  }, [focused, debouncedScroll])
 
-  useEffect(() => {
-    data.refresh(FILE_SORT_MODE_DATE, SORT_DESCENDING).then(() => {
-      setEntries(() => ['..', ...data._entries])
-      setCursorOver(0)
-    })
-  }, [data])
-
+  // effects
   useEffect(() => {
     if (focused) {
-      window.addEventListener('keydown', memoizeHandleKeyDown)
-      window.addEventListener('mousewheel', memoizeHandleMouseWheel)
+      window.addEventListener('keydown', memoizeHandlers.handleKeyDown)
+      window.addEventListener('mousewheel', memoizeHandlers.handleMouseWheel)
 
       selectRef?.current.addEventListener('wheel', (event) => {
         event.preventDefault()
@@ -73,13 +54,19 @@ const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
     }
     // cleanup this component
     return () => {
-      window.removeEventListener('keydown', memoizeHandleKeyDown)
-      window.removeEventListener('mousewheel', memoizeHandleMouseWheel)
+      window.removeEventListener('keydown', memoizeHandlers.handleKeyDown)
+      window.removeEventListener('mousewheel', memoizeHandlers.handleMouseWheel)
       selectRef?.current?.removeEventListener('wheel', (event) => {
         event.preventDefault()
       })
     }
-  }, [memoizeHandleKeyDown, focused, memoizeHandleMouseWheel])
+  }, [memoizeHandlers, focused])
+
+  useEffect(() => {
+    data.refresh(FILE_SORT_MODE_DATE, SORT_DESCENDING).then(() => {
+      setEntries(['..', ...data._entries])
+    })
+  }, [data])
 
   return (
     <section className="file-viewer">
@@ -88,7 +75,7 @@ const DirectoryListViewer = ({ data, focused, onEntryCallback }) => {
         {entries.map((entry, k) => (
           <DirectoryEntry
             key={k}
-            index={k}
+            paneIndex={paneIndex}
             entry={entry}
             cursor_over={focused && k === cursorOver}
             // onEntryCallback={onEntryCallback}
