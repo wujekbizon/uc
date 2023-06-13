@@ -13,7 +13,7 @@ const PanelView = () => {
   )
   const { directoryListData } = useSelector((state) => state.directoryListsData)
   const { isViewFileModalOpen } = useSelector((state) => state.modals)
-  const { openViewFileModal, toggleFocus, fetchDirectoryList, getOppositePaneIndex } = useActions()
+  const { openViewFileModal, toggleFocus, fetchDirectoryList, getOppositePaneIndex, resetCursorPosition } = useActions()
 
   // effects
   useEffect(() => {
@@ -30,6 +30,7 @@ const PanelView = () => {
 
   const togglePanes = (event) => {
     event.preventDefault()
+    resetCursorPosition()
     const nextIndex = (focusedPaneIndex + 1) % directoryViewCount
     toggleFocus(nextIndex)
   }
@@ -104,7 +105,7 @@ const PanelView = () => {
       {directoryListData?.map((data, index) => {
         return (
           <Fragment key={index}>
-            <DirectoryListViewer data={data} focused={focusedPaneIndex === index} paneIndex={index} />
+            <DirectoryListViewer data={data} paneIndex={index} />
             {index !== directoryListData.length - 1 && <ViewerDivider />}
           </Fragment>
         )

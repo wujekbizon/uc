@@ -49,6 +49,9 @@ const fileExplorerSlice = createSlice({
     updateScrollCursorPosition: (state, { payload }) => {
       state.cursorOver = Math.max(Math.min(state.cursorOver + payload.cursorDelta, payload.entries.length - 1), 0)
     },
+    resetCursorPosition: (state) => {
+      state.cursorOver = 0
+    },
   },
 })
 
@@ -60,5 +63,6 @@ export const {
   updateCursorPosition,
   updateScrollCursorPosition,
   getOppositePaneIndex,
+  resetCursorPosition,
 } = fileExplorerSlice.actions
 export const fileExplorerReducer = fileExplorerSlice.reducer

@@ -36,14 +36,11 @@
     color: #8f93a2;
     cursor: pointer;
     border: 1px solid transparent;
+    outline: none;
 
     &:hover {
       background-color: rgba(113, 124, 180, 0.5);
     }
-  }
-
-  .file-selected {
-    border: 1px dotted #292d3e;
   }
 
   .file-cursor-over {

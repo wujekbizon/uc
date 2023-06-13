@@ -15,10 +15,12 @@ import { traverseDirectory } from '../helpers/fileSystem'
  * @param {fs.Dirent|String} entry - File entry or '..'
  */
 
-const DirectoryEntry = ({ paneIndex, entry, cursor_over, onEntryCallback }) => {
+const DirectoryEntry = ({ paneIndex, entry, entryIndex }) => {
   const { focusedPaneIndex, cursorOver } = useSelector((state) => state.fileExplorers)
   const { directoryListData } = useSelector((state) => state.directoryListsData)
   const { setSelectedFile, addDirectoryToList } = useActions()
+
+  const cursor_over = focusedPaneIndex === paneIndex && entryIndex === cursorOver
 
   const onEntryAction = (viewerIndex, entry) => {
     if (entry === '..' || entry.isDirectory()) {
@@ -29,28 +31,46 @@ const DirectoryEntry = ({ paneIndex, entry, cursor_over, onEntryCallback }) => {
     }
   }
 
-  const onHandleClick = () => {
+  const handleClick = () => {
     onEntryAction(paneIndex, entry)
   }
 
-  const stateCss = () => {
-    return `file-container ${cursor_over ? 'file-cursor-over' : ''}${entry.selected ? 'file-selected' : ''}`
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && entry.isDirectory()) {
+      event.preventDefault()
+      onEntryAction(paneIndex, entry)
+    }
   }
 
   return (
     <>
       {entry === '..' && (
-        <div className={stateCss()} onDoubleClick={onHandleClick}>
+        <div
+          className={`file-container ${cursor_over ? 'file-cursor-over' : ''}`}
+          tabIndex={0}
+          onKeyDown={handleKeyDown}
+          onDoubleClick={handleClick}
+        >
           <ImArrowUp /> [..]
         </div>
       )}
       {typeof entry !== 'string' && entry.isDirectory() && (
-        <div className={stateCss()} onDoubleClick={onHandleClick}>
+        <div
+          className={`file-container ${cursor_over ? 'file-cursor-over' : ''}`}
+          tabIndex={0}
+          onKeyDown={handleKeyDown}
+          onDoubleClick={handleClick}
+        >
           <FcFolder /> [{entry.name}]
         </div>
       )}
       {typeof entry !== 'string' && !entry.isDirectory() && (
-        <div className={stateCss()} onClick={onHandleClick}>
+        <div
+          className={`file-container ${cursor_over ? 'file-cursor-over' : ''}`}
+          tabIndex={0}
+          onKeyDown={handleKeyDown}
+          onClick={handleClick}
+        >
           <FcFile /> {entry.name}
         </div>
       )}

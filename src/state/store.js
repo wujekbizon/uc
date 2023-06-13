@@ -24,6 +24,7 @@ import {
   updateCursorPosition,
   updateScrollCursorPosition,
   getOppositePaneIndex,
+  resetCursorPosition,
 } from './slices/fileExplorer'
 import { directoryListReducer, addDirectoryToList, fetchDirectoryList } from './slices/directoryList'
 
@@ -59,4 +60,5 @@ export const actionCreators = {
   updateCursorPosition,
   updateScrollCursorPosition,
   getOppositePaneIndex,
+  resetCursorPosition,
 }
