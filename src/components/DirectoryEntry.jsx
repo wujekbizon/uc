@@ -1,5 +1,5 @@
 import './DirectoryListViewer.scss'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useActions } from '../hooks/useActions'
 import { useSelector } from 'react-redux'
 import { FcFolder, FcFile } from 'react-icons/fc'
@@ -15,21 +15,27 @@ import { traverseDirectory } from '../helpers/fileSystem'
  * @param {fs.Dirent|String} entry - File entry or '..'
  */
 
-const DirectoryEntry = ({ paneIndex, entry, entryIndex }) => {
+// creates a memoized version of the component
+const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
   const { focusedPaneIndex, cursorOver } = useSelector((state) => state.fileExplorers)
   const { directoryListData } = useSelector((state) => state.directoryListsData)
   const { setSelectedFile, addDirectoryToList } = useActions()
 
   const cursor_over = focusedPaneIndex === paneIndex && entryIndex === cursorOver
 
-  const onEntryAction = (viewerIndex, entry) => {
-    if (entry === '..' || entry.isDirectory()) {
-      const newDirectory = traverseDirectory(viewerIndex, entry, directoryListData)
-      addDirectoryToList(newDirectory)
-    } else {
-      setSelectedFile(entry)
-    }
-  }
+  // useCallback used to memoize callback functions to prevent unnecessary
+  // re-renders caused by passing new functions down to child components on each render.
+  const onEntryAction = useCallback(
+    (viewerIndex, entry) => {
+      if (entry === '..' || entry.isDirectory()) {
+        const newDirectory = traverseDirectory(viewerIndex, entry, directoryListData)
+        addDirectoryToList(newDirectory)
+      } else {
+        setSelectedFile(entry)
+      }
+    },
+    [addDirectoryToList, directoryListData, setSelectedFile]
+  )
 
   const handleClick = () => {
     onEntryAction(paneIndex, entry)
@@ -76,6 +82,5 @@ const DirectoryEntry = ({ paneIndex, entry, entryIndex }) => {
       )}
     </>
   )
-}
-
+})
 export default DirectoryEntry
