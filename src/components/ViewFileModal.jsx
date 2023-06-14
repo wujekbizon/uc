@@ -1,17 +1,19 @@
 import './ViewFileModal.scss'
 import React, { useEffect, useState } from 'react'
 import { MdOutlineClose } from 'react-icons/md'
+import { useSelector } from 'react-redux'
 import { useActions } from '../hooks/useActions'
 
-const ViewFileModal = ({ viewData, selectedFile }) => {
-  const [ contents, setContents ] = useState("")
+const ViewFileModal = ({ viewData }) => {
+  const { selectedFile } = useSelector((state) => state.fileExplorers)
+  const [contents, setContents] = useState('')
   const { closeViewFileModal } = useActions()
 
   useEffect(() => {
     /* todo - This is slow on large files. Buffer data. 
     Need to determine max width and height so scrollbars can be set properly without displaying entire file
     */
-    viewData.getContents(selectedFile).then(buffer => {
+    viewData.getContents(selectedFile).then((buffer) => {
       setContents(buffer.toString())
     })
   }, [selectedFile])

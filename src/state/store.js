@@ -15,11 +15,25 @@ import {
   loadAppSuccess,
   loadAppError,
 } from './slices/mobilePlatformsSlice'
+import {
+  fileExplorerReducer,
+  toggleFocus,
+  setSelectedFile,
+  setFocus,
+  setEntries,
+  updateCursorPosition,
+  updateScrollCursorPosition,
+  getOppositePaneIndex,
+  resetCursorPosition,
+} from './slices/fileExplorer'
+import { directoryListReducer, addDirectoryToList, fetchDirectoryList } from './slices/directoryList'
 
 export const store = configureStore({
   reducer: {
     modals: modalsReducer,
     mobilePlatforms: mobilePlatformsReducer,
+    fileExplorers: fileExplorerReducer,
+    directoryListsData: directoryListReducer,
   },
   middleware: getDefaultMiddleware({
     serializableCheck: false,
@@ -37,4 +51,14 @@ export const actionCreators = {
   disableMobileLayout,
   loadAppSuccess,
   loadAppError,
+  toggleFocus,
+  setSelectedFile,
+  setFocus,
+  addDirectoryToList,
+  fetchDirectoryList,
+  setEntries,
+  updateCursorPosition,
+  updateScrollCursorPosition,
+  getOppositePaneIndex,
+  resetCursorPosition,
 }

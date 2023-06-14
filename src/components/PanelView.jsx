@@ -1,112 +1,78 @@
 import './PanelView.scss'
-import React, { useEffect, useState, useMemo, Fragment } from 'react'
+import React, { useEffect, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { useActions } from '../hooks/useActions'
-
+import { refreshPanes } from '../state/apiCalls'
 // Components
 import { ViewerDivider, DirectoryListViewer, ViewFileModal } from './index'
-import DirectoryListData from '../api/DirectoryListData'
-
-// todo: provide list of starting directories from saved state
-const initFileViewerData = (n) => {
-  let a = []
-  while (a.length < n) {
-    a.push(new DirectoryListData())
-  }
-
-  return a
-}
+import { useKeyboardEvents } from '../hooks/useKeyboardEvents'
 
 const PanelView = () => {
-  const directoryViewCount = 2
-  const [focusedPaneIndex, setFocusedPaneIndex] = useState(0)
-  const [viewData, setFileViewerData] = useState(initFileViewerData(directoryViewCount))
-  const [selectedFile, setSelectedFile] = useState(null)
+  const { focusedPaneIndex, selectedFile, directoryViewCount, oppositePaneIndex } = useSelector(
+    (state) => state.fileExplorers
+  )
+  const { directoryListData } = useSelector((state) => state.directoryListsData)
   const { isViewFileModalOpen } = useSelector((state) => state.modals)
-  const { openViewFileModal } = useActions()
-  const allPanes = []
-  for (let x = 0; x < directoryViewCount; ++x) {
-    allPanes.push(x)
-  }
+  const { openViewFileModal, toggleFocus, fetchDirectoryList, getOppositePaneIndex, resetCursorPosition } = useActions()
 
-  const refreshPanes = (paneIndexes) => {
-    if (!Array.isArray(paneIndexes)) paneIndexes = [paneIndexes]
+  // effects
+  useEffect(() => {
+    // fetching a list of data
+    fetchDirectoryList(directoryViewCount)
+  }, [directoryViewCount])
 
-    paneIndexes.forEach((viewerIndex) => {
-      setFileViewerData((viewData) => {
-        viewData[viewerIndex] = new DirectoryListData(viewData[viewerIndex].currentDirectory)
-        return [...viewData]
-      })
-    })
-  }
+  useEffect(() => {
+    // we need to run this by Redux to avoid any strange behaviors
+    // so everytime we change panes we will get opposite index and update
+    // the state
+    getOppositePaneIndex()
+  }, [focusedPaneIndex])
 
-  // get the index of the next unfocused pane
-  const getOppositePaneIndex = () => {
-    return (focusedPaneIndex + 1) % directoryViewCount
-  }
-
-  // wrapping in useMemo so we can avoid unnecessary re-renders and improve the performance.
-  const memoizeHandleKeyDown = useMemo(() => {
-    return (event) => {
-      if (event.key === 'Tab') {
-        event.preventDefault()
-        setFocusedPaneIndex((focused) => {
-          focused++
-          if (focused >= directoryViewCount) {
-            focused = 0
-          }
-          return focused
-        })
-      }
-
-      let keyMap = {
-        F3: openViewFileModal,
-        F4: unhandledKey,
-        F5: copyFile,
-        F6: moveFile,
-        F7: newFolder,
-        F8: deleteFile,
-      }
-
-      if (selectedFile) {
-        event.preventDefault()
-        if (keyMap[event.key] !== undefined) {
-          keyMap[event.key](event)
-        }
-        return false
-      }
-    }
-  }, [directoryViewCount, openViewFileModal, selectedFile])
-
-  const unhandledKey = (event) => {
-    console.log(`key not yet implemented: ${event.key}`)
+  const togglePanes = (event) => {
+    event.preventDefault()
+    resetCursorPosition()
+    const nextIndex = (focusedPaneIndex + 1) % directoryViewCount
+    toggleFocus(nextIndex)
   }
 
   const copyFile = async (event) => {
     if (selectedFile === '..') return
-
     // todo - copy file dialog, check if dest exists add (1) suffix
     // todo - chunked copy with progress dialog
-    const destPaneIndex = getOppositePaneIndex()
-    if (await viewData[focusedPaneIndex].copyFile(selectedFile, viewData[destPaneIndex].currentDirectory)) {
-      refreshPanes(destPaneIndex)
+    if (
+      await directoryListData[focusedPaneIndex].copyFile(
+        selectedFile,
+        directoryListData[oppositePaneIndex].currentDirectory
+      )
+    ) {
+      refreshPanes(oppositePaneIndex)
     }
+  }
+
+  const unhandledKey = (event) => {
+    console.log(`key not yet implemented: ${event.key}`)
   }
 
   const moveFile = async (event) => {
     if (selectedFile === '..') return
     // todo - same dialog as copy file
     // todo - refresh source, dest panes
-    const destPaneIndex = getOppositePaneIndex()
-    if (await viewData[focusedPaneIndex].moveFile(selectedFile, viewData[destPaneIndex].currentDirectory)) {
-      refreshPanes(allPanes)
+    if (
+      await directoryListData[focusedPaneIndex].moveFile(
+        selectedFile,
+        directoryListData[oppositePaneIndex].currentDirectory
+      )
+    ) {
+      // refreshPanes(allPanes)
+      //  I think we can use this instead
+      fetchDirectoryList(directoryViewCount)
     }
   }
 
   const newFolder = async (event) => {
     // todo - folder name dialog, takes current entry as starting point for new folder name, all text selected for easy overwrite
     // todo - refresh current pane
-    if (await viewData[focusedPaneIndex].newFolder('new\\path')) {
+    if (await directoryListData[focusedPaneIndex].newFolder('new\\path')) {
       refreshPanes(focusedPaneIndex)
     }
   }
@@ -116,54 +82,35 @@ const PanelView = () => {
     // todo - Are you sure dialog
     // todo - delete to recycle/trash bin if shift not pressed
     // todo - refresh current pane
-    if (await viewData[focusedPaneIndex].deleteFile(selectedFile)) {
+    if (await directoryListData[focusedPaneIndex].deleteFile(selectedFile)) {
       refreshPanes(focusedPaneIndex)
     }
   }
 
-  useEffect(() => {
-    window.addEventListener('keydown', memoizeHandleKeyDown)
-
-    return () => {
-      window.removeEventListener('keydown', memoizeHandleKeyDown)
-    }
-  }, [memoizeHandleKeyDown])
-
-  const onEntryAction = (viewerIndex, entry) => {
-    if (entry === '..' || entry.isDirectory()) {
-      traverseDirectory(viewerIndex, entry)
-    } else {
-      setSelectedFile(entry)
-    }
+  const keyHandlers = {
+    Tab: togglePanes,
+    F3: openViewFileModal,
+    F4: unhandledKey,
+    F5: copyFile,
+    F6: moveFile,
+    F7: newFolder,
+    F8: deleteFile,
   }
+  // passing fn names into dependencies array inside useMemo,
+  // we can think later about moving all of this fn calls into redux
+  useKeyboardEvents(keyHandlers, [togglePanes, unhandledKey, copyFile, moveFile, newFolder, deleteFile])
 
-  const traverseDirectory = (viewerIndex, entry) => {
-    // todo - path history
-    setFileViewerData((viewData) => {
-      viewData[viewerIndex] = viewData[viewerIndex].traverse(entry)
-      return [...viewData]
-    })
-  }
   return (
     <section className="panel-view">
-      {viewData.map((data, index) => (
-        <Fragment key={index}>
-          <DirectoryListViewer
-            data={data}
-            index={index}
-            focused={focusedPaneIndex === index}
-            onEntryCallback={(entry) => onEntryAction(index, entry)}
-          />
-          {index !== viewData.length - 1 && <ViewerDivider />}
-        </Fragment>
-      ))}
-      {isViewFileModalOpen && (
-        <ViewFileModal
-          viewData={viewData[focusedPaneIndex]}
-          focusedPaneIndex={focusedPaneIndex}
-          selectedFile={selectedFile}
-        />
-      )}
+      {directoryListData?.map((data, index) => {
+        return (
+          <Fragment key={index}>
+            <DirectoryListViewer data={data} paneIndex={index} />
+            {index !== directoryListData.length - 1 && <ViewerDivider />}
+          </Fragment>
+        )
+      })}
+      {isViewFileModalOpen && <ViewFileModal viewData={directoryListData[focusedPaneIndex]} />}
     </section>
   )
 }

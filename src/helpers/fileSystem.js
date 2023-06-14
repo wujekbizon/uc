@@ -1,9 +1,11 @@
-import Path from 'socket:path'
-import process from 'socket:process'
-
-// export const getDirectoryContents = async (directoryPath) => {
-//   const path = process.cwd()
-//   console.log(path)
-//   const directoryName = await Path.basename(directoryPath)
-//   console.log(directoryName)
-// }
+// Function to traverse a single directory
+export const traverseDirectory = (viewerIndex, entry, directoryListData) => {
+  const newDirectory = directoryListData.map((item, index) => {
+    if (index === viewerIndex) {
+      return item.traverse(entry)
+    } else {
+      return item
+    }
+  })
+  return newDirectory
+}
