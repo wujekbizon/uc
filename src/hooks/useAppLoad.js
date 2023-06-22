@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { arch } from 'socket:os'
+import { arch } from './stubs'
 
 export const useAppLoad = (loadingTime = 3000, onLoadSuccess, onLoadError) => {
   // this hook takes three inputs: the duration of the loading

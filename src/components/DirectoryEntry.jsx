@@ -6,7 +6,6 @@ import { FcFolder, FcFile } from 'react-icons/fc'
 import { ImArrowUp } from 'react-icons/im'
 
 // Components
-import fs from 'socket:fs/promises'
 import { traverseDirectory } from '../helpers/fileSystem'
 
 /**

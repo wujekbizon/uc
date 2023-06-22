@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import os from 'socket:os'
+import {os} from './stubs'
 
 // memoize generic fn using the useMemo hook to prevent unnecessary re-renders.
 // we passing key and modifiers parameters and fn returns listener fn that is

@@ -1,7 +1,4 @@
-import { rand64 } from 'socket:crypto'
-import fs from 'socket:fs/promises'
-import path from 'socket:path'
-import process from 'socket:process'
+import { fs, path, process } from './stubs'
 
 export const SORT_ASCENDING           = 0
 export const SORT_DESCENDING          = 1
