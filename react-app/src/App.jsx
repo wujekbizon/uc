@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.scss'
+import React from 'react'
+import { useSelector } from 'react-redux'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+// custom hooks
+import { useAppLoad } from './hooks/useAppLoad'
+import { useActions } from './hooks/useActions'
+
+// Components
+import { SplashScreen, Commander } from './components'
+
+const App = () => {
+  const { isLoading } = useSelector((state) => state.mobilePlatforms)
+  const { loadAppError, loadAppSuccess } = useActions()
+  // Initial Loading
+  // As a parameter hook can accept loading time , by default is 3s
+  // onLoadSuccess and onLoadError callbacks
+  useAppLoad(500, loadAppSuccess, loadAppError)
+
+  return <>{isLoading ? <SplashScreen /> : <Commander />}</>
 }
-
-export default App;
+export default App

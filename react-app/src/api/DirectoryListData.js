@@ -237,7 +237,7 @@ export default class DirectoryListData {
     // todo - recursive delete
     const srcPath = path.join(this.currentDirectory, entry.name)
 
-    console.log(`rm ${srcPath} => ${destPath}`)
+    console.log(`rm ${srcPath}`)
     console.log(`WARNING - fs.rm not implemented`)
     
     return new Promise(async (resolve, reject) => {
