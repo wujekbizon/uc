@@ -1,4 +1,4 @@
-import { fs, path, process } from './stubs'
+import { fs, path, process } from '../stubs'
 
 export const SORT_ASCENDING           = 0
 export const SORT_DESCENDING          = 1
