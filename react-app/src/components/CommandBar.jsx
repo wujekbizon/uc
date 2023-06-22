@@ -1,7 +1,6 @@
 import './CommandBar.scss'
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { links, subLinksIcons } from '../data/commandBarLinks'
-import memoizeHandleKeyPress from '../helpers/keyboardUtilis'
 import { useMenuShortcuts } from '../hooks/useMenuShortcuts'
 import { useActions } from '../hooks/useActions'
 
@@ -10,10 +9,25 @@ import { CommandBarSubMenu } from './index'
 
 const CommandBar = () => {
   const [active, setActive] = useState(null)
-  const handleKeyPress = memoizeHandleKeyPress()
   const { openSubMenu } = useActions()
 
-  useMenuShortcuts(handleKeyPress)
+  const memoizeHandleKeyPress = useMemo(
+    () => (key, modifiers, callback) => {
+      const listener = (event) => {
+        const hasModifiers = modifiers.every((modifier) => event[`${modifier.toLowerCase()}Key`])
+        if (hasModifiers && event.key === key) {
+          callback(event)
+        }
+      }
+      window.addEventListener('keydown', listener)
+      return () => {
+        window.removeEventListener('keydown', listener)
+      }
+    },
+    []
+  )
+
+  useMenuShortcuts(memoizeHandleKeyPress)
 
   const handleClick = (title, id) => {
     switch (title) {
@@ -65,9 +79,6 @@ const CommandBar = () => {
         </ul>
         <div>
           <h4>
-            {/* here I want to have a button that will open new window and 
-            show all the shortcuts, help ,credits etc or I can show modal 
-            we can discuss that*/}
             <span>H</span>elp
           </h4>
         </div>
