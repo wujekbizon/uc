@@ -15,7 +15,7 @@ import {
   removeMessageEventListener,
   nativeMessage
 }
-from './RectavaloWeb'
+from './rectavalo/RectavaloWeb'
 
 
 const App = () => {

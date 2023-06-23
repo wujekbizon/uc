@@ -1,4 +1,4 @@
-import { nativeCall, nativeCallx1Param } from "../RectavaloWeb"
+import { nativeCallx1Param } from "./RectavaloWeb"
 
 const FileSystem = {
   ls: async (path) => {

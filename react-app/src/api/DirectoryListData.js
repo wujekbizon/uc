@@ -1,6 +1,6 @@
-import { path, process } from '../stubs'
-import FileSystem from './FileSystem';
-import { log } from '../RectavaloWeb'
+import { path, process } from '../rectavalo/stubs'
+import FileSystem from '../rectavalo/FileSystem';
+import { log } from '../rectavalo/RectavaloWeb'
 
 export const SORT_ASCENDING           = 0
 export const SORT_DESCENDING          = 1
