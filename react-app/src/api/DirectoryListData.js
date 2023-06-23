@@ -1,5 +1,6 @@
 import { path, process } from '../stubs'
 import FileSystem from './FileSystem';
+import { log } from '../RectavaloWeb'
 
 export const SORT_ASCENDING           = 0
 export const SORT_DESCENDING          = 1
@@ -110,12 +111,16 @@ export default class DirectoryListData {
     
     let entries = []
     
-    const results = (await FileSystem.ls(this._currentDirectory, { withFileTypes: true }))
-    entries = results.map(entry => { 
-      entry.birthtimeMs = entry.mtimeMs = entry.mtime
-      entry.isDirectory = entry.dir;
-      return entry;
-    })
+    try {
+      const results = (await FileSystem.ls(this._currentDirectory, { withFileTypes: true }))
+      entries = results.map(entry => { 
+        entry.birthtimeMs = entry.mtimeMs = entry.mtime
+        entry.isDirectory = entry.dir;
+        return entry;
+      })
+    } catch (e) {
+      log(`todo - toast error - failed to list: ${this._currentDirectory}: ${e.message}\n${e.stack}`)
+    }
     
     // prevent duplicate refresh issue, assign entire list after processing
     this.sortMode = sortMode

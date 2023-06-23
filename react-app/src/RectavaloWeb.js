@@ -28,7 +28,7 @@ const nativeCallx1Param = (p) => {
   p.callbackId = ++_callbackId
 
   queueMicrotask(() => { postMessage(p) })
-  
+
   return new Promise(resolve => {
     _resolveQueue[p.callbackId] = resolve
   })
@@ -85,6 +85,11 @@ const nativeMessage = (...args) => {
   }
 }
 
+const log = (...args) => {
+  console.log(args)
+  nativeCall('console.log', ...args)
+}
+
 export { 
   chromeWebView, 
   reactNativeWebView, 
@@ -94,5 +99,6 @@ export {
   removeMessageEventListener,
   nativeCall,
   nativeCallx1Param,
-  nativeMessage
+  nativeMessage,
+  log
 }
