@@ -1,4 +1,5 @@
-import { fs, path, process } from '../stubs'
+import { path, process } from '../stubs'
+import FileSystem from './FileSystem';
 
 export const SORT_ASCENDING           = 0
 export const SORT_DESCENDING          = 1
@@ -15,9 +16,9 @@ export const FILE_SORT_MODE_DATE      = 5
    * @returns 
    */
 function sortDirectories (a, b) {
-  if (a.isDirectory() && b.isDirectory()) return a.name.localeCompare(b.name)
+  if (a.isDirectory && b.isDirectory) return a.name.localeCompare(b.name)
   // always sort directories to top
-  if (a.isDirectory() || b.isDirectory()) return 1
+  if (a.isDirectory || b.isDirectory) return 1
 
   return undefined;
 }
@@ -84,7 +85,7 @@ export default class DirectoryListData {
     const cd = this.currentDirectory;
     if (entry === '..') {
       return new DirectoryListData(path.dirname(cd))
-    } else if (entry.isDirectory()) {
+    } else if (entry.isDirectory) {
       return new DirectoryListData(path.join(cd, entry.name))
     } else {
       // todo (@mribbons): cursor should move to file if path ends in file
@@ -109,19 +110,12 @@ export default class DirectoryListData {
     
     let entries = []
     
-    for (const entry of (await fs.readdir(this._currentDirectory, { withFileTypes: true }))) {
-      entries.push(entry)
-
-      try {
-        // todo(@mribbons): populate async
-        let stat = await fs.stat(path.join(this._currentDirectory, entry.name));
-        entry.size = stat.size
-        entry.mtimeMs = stat.mtimeMs
-        entry.birthtimeMs = stat.birthtimeMs
-      } catch (_) {
-        entry.birthtimeMs = entry.mtimeMs = entry.size = 0
-      }
-    }
+    const results = (await FileSystem.ls(this._currentDirectory, { withFileTypes: true }))
+    entries = results.map(entry => { 
+      entry.birthtimeMs = entry.mtimeMs = entry.mtime
+      entry.isDirectory = entry.dir;
+      return entry;
+    })
     
     // prevent duplicate refresh issue, assign entire list after processing
     this.sortMode = sortMode
@@ -178,12 +172,12 @@ export default class DirectoryListData {
    * @returns {Promise<Buffer>} Buffer containing file data
    */
   async getContents (entry) {
-    return fs.readFile(this.fullPath(entry))
+    return FileSystem.readFile(this.fullPath(entry))
   }
 
   static async exists(path) {
     try {
-      return fs.stat(path)
+      return FileSystem.stat(path)
     } catch (_) {
       return undefined
     }
@@ -202,7 +196,7 @@ export default class DirectoryListData {
 
     return new Promise(async (resolve, reject) => {
       try {
-        await fs.writeFile(destPath, await fs.readFile(srcPath))
+        await FileSystem.writeFile(destPath, await FileSystem.readFile(srcPath))
         resolve(true)
       } catch (e) {
         console.log(`copy failed: ${e.message}`)
@@ -216,7 +210,7 @@ export default class DirectoryListData {
     const destPath = path.join(destFolder, entry.name)
 
     console.log(`rename ${srcPath} => ${destPath}`)
-    console.log(`WARNING - fs.rename not implemented`)
+    console.log(`WARNING - FileSystem.rename not implemented`)
 
     if (await DirectoryListData.exists(destPath)) {
       return false
@@ -224,7 +218,7 @@ export default class DirectoryListData {
 
     return new Promise(async (resolve, reject) => {
       try {
-        await fs.rename(srcPath, destPath)
+        await FileSystem.rename(srcPath, destPath)
         resolve(true)
       } catch (e) {
         console.log(`rename failed: ${e.message}`)
@@ -238,11 +232,11 @@ export default class DirectoryListData {
     const srcPath = path.join(this.currentDirectory, entry.name)
 
     console.log(`rm ${srcPath}`)
-    console.log(`WARNING - fs.rm not implemented`)
+    console.log(`WARNING - FileSystem.rm not implemented`)
     
     return new Promise(async (resolve, reject) => {
       try {
-        await fs.rm(srcPath)
+        await FileSystem.rm(srcPath)
         resolve(true)
       } catch (e) {
         console.log(`delete failed: ${e.message}`)
@@ -256,12 +250,12 @@ export default class DirectoryListData {
       return
     } else {
       await DirectoryListData.mkdir(await path.dirname(folder))
-      await fs.mkdir(folder)
+      await FileSystem.mkdir(folder)
     }
   }
 
   async newFolder(name) {
-    // calling fs.stat on a subfolder that doesn't exist doesn't return false, check each supplied path one by one
+    // calling FileSystem.stat on a subfolder that doesn't exist doesn't return false, check each supplied path one by one
     const parts = name.split(path.sep)
     let newPath = path.join(this.currentDirectory)
 

@@ -244,7 +244,7 @@
     <ClCompile Include="..\cxx\rectavalo_io.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\cxx\rectavalo_io.hpp" />
+    <None Include="..\cxx\rectavalo_io.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\cxx\json\json.h" />
@@ -254,6 +254,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\cxx\jsoncpp.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\cxx\filesystem.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\cxx\filesystem.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -9,6 +9,8 @@
 #include <Windows.h>
 #endif
 
+#include "filesystem.hpp"
+
 std::string value = "Hello from C++!";
 
 #ifdef ANDROID
@@ -115,44 +117,101 @@ Json::Value console_log(const std::vector<Json::Value> args) {
   return jsonOk();
 }
 
-std::string onMessage(const Json::Value json) {
-  /*for (auto member : json.getMemberNames()) {
-    std::cout << "onMessage: " << member << std::endl;
-    std::cout << "onMessage: " << member << ": " << json[member] << std::endl;
-  }*/
+Json::Value unknownRequest(std::string fn) {
+  Json::Value response;
+  response["error"] = "Unknown request: " + fn;
+  return response;
+}
 
+bool hasError(Json::Value response) {
+  return response["error"].size() > 0;
+}
+
+bool validateArg(const Json::Value json, Json::Value& response, const std::string name, Json::ValueType type) {
+  if (json[name].type() == type) {
+    return true;
+  }
+
+  std::string typeName = "";
+  switch (type)
+  {
+  case Json::stringValue:
+    typeName = "string";
+    break;
+  case Json::intValue:
+    typeName = "init";
+    break;
+  case Json::uintValue:
+    typeName = "uint";
+    break;
+  case Json::booleanValue:
+    typeName = "boolean";
+    break;
+  case Json::realValue:
+    typeName = "real";
+    break;
+  case Json::arrayValue:
+    typeName = "array";
+    break;
+  case Json::objectValue:
+    typeName = "object";
+    break;
+  default:
+    typeName = "! unsupported type specified.";
+    break;
+  }
+
+  response["error"]["args"][name] = "Not of type " + typeName;
+  return false;
+}
+
+std::string onMessage(const Json::Value json) {
   std::string fn;
+  std::string ns;
   int callbackId = -1;
   std::vector<Json::Value> args;
-  if (json["fn"].isString()) {
-    fn = json["fn"].asString();
+
+  if (json[FN].isString()) {
+    fn = json[FN].asString();
   }
 
-  if (json["callbackId"].isIntegral()) {
-    callbackId = json["callbackId"].asInt();
+  if (json[NS].isString()) {
+    ns = json[NS].asString();
   }
 
-  if (json["args"].isArray()) {
-    for (unsigned int x = 0; x < json["args"].size(); ++x) {
-      args.push_back(json["args"][x]);
+  if (json[CALLBACK_ID].isIntegral()) {
+    callbackId = json[CALLBACK_ID].asInt();
+  }
+
+  if (json[ARGS].isArray()) {
+    for (unsigned int x = 0; x < json[ARGS].size(); ++x) {
+      args.push_back(json[ARGS][x]);
     }
   }
 
   Json::Value response;
-  if (fn == "nativeHello") {
-    response["nativeResult"] = hello();
-  } else if (fn == "console.log") {
-    // should supress console response. Logging this response creates an infinite loop.
-    response["result"] = console_log(args);
-  } else if (fn == "io.readFile") {
-    response = io_readFile(args);
-  } else {
-    response["error"] = "Unknown request: " + fn;
+
+  // todo: namespace / onMessage map
+  if (ns == FILE_SYSTEM) {
+    response = rectavalo::filesystem::filesystem_onMessage(fn, json, args);
+  }
+  else {
+    if (fn == "nativeHello") {
+      response["nativeResult"] = hello();
+    }
+    else if (fn == CONSOLE_LOG) {
+      // should supress console response. Logging this response creates an infinite loop.
+      response["result"] = console_log(args);
+    }
+    else if (fn == "io.readFile") {
+      response = io_readFile(args);
+    }
+    else {
+      response = unknownRequest(fn);
+    }
   }
 
-  if (callbackId > -1) response["callbackId"] = callbackId;
+  if (callbackId > -1) response[CALLBACK_ID] = callbackId;
 
-  // todo: await response in client side, don't console.log every response (infinite loop)
-  // return json_stringify(response);
   return json_stringify(response);
 }

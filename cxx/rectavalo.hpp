@@ -3,6 +3,13 @@
 
 #include <json/json.h>
 
+const std::string FN = "fn";
+const std::string NS = "ns";
+const std::string CALLBACK_ID = "callbackId";
+const std::string ARGS = "args";
+const std::string FILE_SYSTEM = "filesystem";
+const std::string CONSOLE_LOG = "console.log";
+
 #ifdef _WIN32
 // Convert a wide Unicode string to an UTF8 string
 std::string utf8_encode(const std::wstring& wstr);
@@ -14,6 +21,9 @@ Json::Value parseJson(const std::string& json);
 Json::Value parseJson(const std::wstring& json);
 Json::Value jsonOk();
 
+Json::Value unknownRequest(std::string fn);
+bool hasError(Json::Value response);
+bool validateArg(const Json::Value json, Json::Value& response, const std::string name, Json::ValueType type);
 std::string onMessage(const std::string& json);
 std::wstring onMessage(const std::wstring& json);
 std::string json_stringify(const Json::Value json);

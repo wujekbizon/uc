@@ -109,7 +109,7 @@ int CALLBACK WinMain(
 		szTitle,
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT,
-		1200, 900,
+		1200, 720,
 		NULL,
 		NULL,
 		hInstance,
