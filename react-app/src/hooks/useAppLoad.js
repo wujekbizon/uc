@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
-import { arch } from '../rectavalo/stubs'
+import sys from '../rectavalo/sys'
+
+// import sys from './rectavalo/sys'
 
 export const useAppLoad = (loadingTime = 3000, onLoadSuccess, onLoadError) => {
   // this hook takes three inputs: the duration of the loading
@@ -14,7 +16,7 @@ export const useAppLoad = (loadingTime = 3000, onLoadSuccess, onLoadError) => {
   // Rendering title
   // this is an extra use case to render the document title
   useEffect(() => {
-    document.title = `Ultimate Commander (${arch()}) 1.0 - PreBuild`
+    document.title = `Ultimate Commander (${sys.architecture()}) 1.0 - PreBuild`
   }, [])
 
   let timer

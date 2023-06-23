@@ -13,10 +13,12 @@ import { SplashScreen, Commander } from './components'
 import {
   addMessageEventListener,
   removeMessageEventListener,
-  nativeMessage
+  nativeMessage,
+  log
 }
 from './rectavalo/RectavaloWeb'
 
+import sys from './rectavalo/sys'
 
 const App = () => {
   const { isLoading } = useSelector((state) => state.mobilePlatforms)
@@ -28,6 +30,9 @@ const App = () => {
 
   useEffect(() => {
     addMessageEventListener(nativeMessage)
+    setTimeout(() => {
+      log(`agent: ${navigator.userAgent}, platform: ${sys.platform()} - ${sys.architecture()}`)
+    }, 1000)
 
     return () => {
       removeMessageEventListener(nativeMessage)
