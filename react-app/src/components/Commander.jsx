@@ -1,6 +1,6 @@
 import './Commander.scss'
 import React from 'react'
-import {os} from '../rectavalo/stubs'
+import  sys  from '../rectavalo/sys'
 import { useSelector } from 'react-redux'
 
 // Components
@@ -12,10 +12,10 @@ const Commander = () => {
 
   return (
     <main className={isMobile ? 'mobile-commander' : 'commander'}>
-      {!isMobile && os.platform() === 'win32' && <CommandBar />}
-      {!isMobile && os.platform() === 'win32' && <PanelView />}
+      {!isMobile && sys.platform() === 'win32' && <CommandBar />}
+      {!isMobile && sys.platform() === 'win32' && <PanelView />}
       {isMobile && <MobilePanelView />}
-      {!isMobile && os.platform() === 'win32' && <Taskbar />}
+      {!isMobile && sys.platform() === 'win32' && <Taskbar />}
     </main>
   )
 }
