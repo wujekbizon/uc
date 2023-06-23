@@ -1,5 +1,5 @@
 import './App.scss'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 // custom hooks
@@ -9,6 +9,15 @@ import { useActions } from './hooks/useActions'
 // Components
 import { SplashScreen, Commander } from './components'
 
+// native layer
+import {
+  addMessageEventListener,
+  removeMessageEventListener,
+  nativeMessage
+}
+from './rectavalo/RectavaloWeb'
+
+
 const App = () => {
   const { isLoading } = useSelector((state) => state.mobilePlatforms)
   const { loadAppError, loadAppSuccess } = useActions()
@@ -16,6 +25,14 @@ const App = () => {
   // As a parameter hook can accept loading time , by default is 3s
   // onLoadSuccess and onLoadError callbacks
   useAppLoad(500, loadAppSuccess, loadAppError)
+
+  useEffect(() => {
+    addMessageEventListener(nativeMessage)
+
+    return () => {
+      removeMessageEventListener(nativeMessage)
+    }
+  }, [nativeMessage])
 
   return <>{isLoading ? <SplashScreen /> : <Commander />}</>
 }

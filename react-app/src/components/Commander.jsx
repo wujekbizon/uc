@@ -1,6 +1,6 @@
 import './Commander.scss'
 import React from 'react'
-import {os} from '../stubs'
+import {os} from '../rectavalo/stubs'
 import { useSelector } from 'react-redux'
 
 // Components

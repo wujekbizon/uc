@@ -46,7 +46,7 @@ const MobilePanelView = () => {
   }, [memoizeHandleKeyDown])
 
   const onEntryAction = (viewerIndex, entry) => {
-    if (entry === '..' || entry.isDirectory()) {
+    if (entry === '..' || entry.isDirectory) {
       traverseDirectory(viewerIndex, entry)
     } else {
       setSelectedFile(entry)

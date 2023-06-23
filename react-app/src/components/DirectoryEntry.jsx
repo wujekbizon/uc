@@ -26,7 +26,7 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
   // re-renders caused by passing new functions down to child components on each render.
   const onEntryAction = useCallback(
     (viewerIndex, entry) => {
-      if (entry === '..' || entry.isDirectory()) {
+      if (entry === '..' || entry.isDirectory) {
         const newDirectory = traverseDirectory(viewerIndex, entry, directoryListData)
         addDirectoryToList(newDirectory)
       } else {
@@ -41,7 +41,7 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
   }
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter' && entry.isDirectory()) {
+    if (event.key === 'Enter' && entry.isDirectory) {
       event.preventDefault()
       onEntryAction(paneIndex, entry)
     }
@@ -59,7 +59,7 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
           <ImArrowUp /> [..]
         </div>
       )}
-      {typeof entry !== 'string' && entry.isDirectory() && (
+      {typeof entry !== 'string' && entry.isDirectory && (
         <div
           className={`file-container ${cursor_over ? 'file-cursor-over' : ''}`}
           tabIndex={0}
@@ -69,7 +69,7 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
           <FcFolder /> [{entry.name}]
         </div>
       )}
-      {typeof entry !== 'string' && !entry.isDirectory() && (
+      {typeof entry !== 'string' && !entry.isDirectory && (
         <div
           className={`file-container ${cursor_over ? 'file-cursor-over' : ''}`}
           tabIndex={0}

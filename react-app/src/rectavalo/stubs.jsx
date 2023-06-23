@@ -1,15 +1,14 @@
-// todo - stubs
-const arch = () => { return "todo" }
+import {
+  nativeCall,
+  nativeMessage
+}
+from './RectavaloWeb'
 
 // todo - stubs
-const fs = {
-  readdir: () => { return [] },
-  stat: () => { return {} },
-  readFile: () => { return "todo" },
-  writeFile: () => {  },
-  rename: () => { },
-  rm: () => {},
-  mkdir: () => {},
+const arch = async () => { 
+  const r = await nativeCall('nativeHello')
+  nativeCall(`console.log`, `arch: ${JSON.stringify(r.nativeResult)}`)
+  return r.nativeResult
 }
 
 // todo - stubs
@@ -22,7 +21,7 @@ const path = {
 
 // todo - stubs
 const process = {
-  cwd: () => { return "todo" },
+  cwd: () => { return "." },
 }
 
 // todo - stubs
@@ -31,8 +30,7 @@ const os = {
 }
 
 export {
-  arch, 
-  fs,
+  arch,
   path,
   process,
   os
