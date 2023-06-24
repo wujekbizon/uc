@@ -19,14 +19,14 @@ const PanelView = () => {
   useEffect(() => {
     // fetching a list of data
     fetchDirectoryList(directoryViewCount)
-  }, [directoryViewCount])
+  }, [directoryViewCount, fetchDirectoryList])
 
   useEffect(() => {
     // we need to run this by Redux to avoid any strange behaviors
     // so everytime we change panes we will get opposite index and update
     // the state
     getOppositePaneIndex()
-  }, [focusedPaneIndex])
+  }, [focusedPaneIndex, getOppositePaneIndex])
 
   const togglePanes = (event) => {
     event.preventDefault()

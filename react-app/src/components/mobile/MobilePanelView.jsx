@@ -1,84 +1,56 @@
 import './MobilePanelView.scss'
-import React, { useEffect, useState, useMemo, Fragment } from 'react'
+import React, { useEffect, Fragment } from 'react'
+import { useSelector } from 'react-redux'
+import { useActions } from '../../hooks/useActions'
 import { BsFillArrowDownSquareFill, BsFillArrowUpSquareFill } from 'react-icons/bs'
 // Components
 import { MobileDirectoryListViewer, MobileViewerDivider } from './index'
-import DirectoryListData from '../../api/DirectoryListData'
-
-// todo: provide list of starting directories from saved state
-const initFileViewerData = (n) => {
-  let a = []
-  while (a.length < n) {
-    a.push(new DirectoryListData())
-  }
-
-  return a
-}
+import ViewFileModal from '../ViewFileModal'
 
 const MobilePanelView = () => {
-  const directoryViewCount = 2
-  const [focusedPaneIndex, setFocusedPaneIndex] = useState(0)
-  const [viewData, setFileViewerData] = useState(initFileViewerData(directoryViewCount))
-  const [selectedFile, setSelectedFile] = useState(null)
-
-  // wrapping in useMemo so we can avoid unnecessary re-renders and improve the performance.
-  const memoizeHandleKeyDown = useMemo(() => {
-    return (event) => {
-      if (event.key === 'Tab') {
-        event.preventDefault()
-        setFocusedPaneIndex((focused) => {
-          focused++
-          if (focused >= directoryViewCount) {
-            focused = 0
-          }
-          return focused
-        })
-      }
-    }
-  }, [directoryViewCount, selectedFile])
+  const { focusedPaneIndex, directoryViewCount } = useSelector((state) => state.fileExplorers)
+  const { directoryListData } = useSelector((state) => state.directoryListsData)
+  const { isViewFileModalOpen } = useSelector((state) => state.modals)
+  const { toggleFocus, fetchDirectoryList, getOppositePaneIndex, resetCursorPosition } = useActions()
+  // effects
+  useEffect(() => {
+    // fetching a list of data
+    fetchDirectoryList(directoryViewCount)
+  }, [directoryViewCount, fetchDirectoryList])
 
   useEffect(() => {
-    window.addEventListener('keydown', memoizeHandleKeyDown)
+    // we need to run this by Redux to avoid any strange behaviors
+    // so everytime we change panes we will get opposite index and update
+    // the state
+    getOppositePaneIndex()
+  }, [focusedPaneIndex, getOppositePaneIndex])
 
-    return () => {
-      window.removeEventListener('keydown', memoizeHandleKeyDown)
-    }
-  }, [memoizeHandleKeyDown])
-
-  const onEntryAction = (viewerIndex, entry) => {
-    if (entry === '..' || entry.isDirectory) {
-      traverseDirectory(viewerIndex, entry)
-    } else {
-      setSelectedFile(entry)
-    }
+  const togglePanes = (event) => {
+    event.preventDefault()
+    resetCursorPosition()
+    const nextIndex = (focusedPaneIndex + 1) % directoryViewCount
+    toggleFocus(nextIndex)
   }
 
-  const traverseDirectory = (viewerIndex, entry) => {
-    // todo - path history
-    setFileViewerData((viewData) => {
-      viewData[viewerIndex] = viewData[viewerIndex].traverse(entry)
-      return [...viewData]
-    })
+  const handleClick = (event) => {
+    console.log('tab press simulate')
+    togglePanes(event)
   }
 
   return (
     <section className="mobile_panel-view">
-      {viewData.map((data, index) => (
+      {directoryListData?.map((data, index) => (
         <Fragment key={index}>
-          <MobileDirectoryListViewer
-            data={data}
-            index={index}
-            focused={focusedPaneIndex === index}
-            onEntryCallback={(entry) => onEntryAction(index, entry)}
-          />
-          {index !== viewData.length - 1 && <MobileViewerDivider />}
-          {/* {focusedPaneIndex % 2 ? (
-            <BsFillArrowUpSquareFill className="icon" />
+          <MobileDirectoryListViewer data={data} paneIndex={index} />
+          {index !== directoryListData.length - 1 && <MobileViewerDivider />}
+          {focusedPaneIndex % 2 ? (
+            <BsFillArrowUpSquareFill className="icon" onClick={handleClick} />
           ) : (
-            <BsFillArrowDownSquareFill className="icon" />
-          )} */}
+            <BsFillArrowDownSquareFill className="icon" onClick={handleClick} />
+          )}
         </Fragment>
       ))}
+      {isViewFileModalOpen && <ViewFileModal viewData={directoryListData[focusedPaneIndex]} />}
     </section>
   )
 }
