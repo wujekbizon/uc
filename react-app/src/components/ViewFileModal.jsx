@@ -16,7 +16,7 @@ const ViewFileModal = ({ viewData }) => {
     viewData.getContents(selectedFile).then((buffer) => {
       setContents(buffer.toString())
     })
-  }, [selectedFile])
+  }, [selectedFile, viewData])
 
   const onClickHandle = () => {
     closeViewFileModal()

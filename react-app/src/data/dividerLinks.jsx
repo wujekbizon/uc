@@ -1,13 +1,5 @@
 import React from 'react'
-import {
-  MdFileCopy,
-  MdFolderCopy,
-  MdEditSquare,
-  MdDriveFileMove,
-  MdFolderDelete,
-  MdFileOpen,
-  MdDeleteForever,
-} from 'react-icons/md'
+import { MdFileCopy, MdEditSquare, MdDriveFileMove, MdFolderDelete, MdFileOpen, MdDeleteForever } from 'react-icons/md'
 import { FcPackage, FcSettings } from 'react-icons/fc'
 
 export const dividerItems = [

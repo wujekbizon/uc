@@ -10,23 +10,22 @@ import { useActions } from './hooks/useActions'
 import { SplashScreen, Commander } from './components'
 
 // native layer
-import {
-  addMessageEventListener,
-  removeMessageEventListener,
-  nativeMessage,
-  log
-}
-from './rectavalo/RectavaloWeb'
+import { addMessageEventListener, removeMessageEventListener, nativeMessage, log } from './rectavalo/RectavaloWeb'
 
 import sys from './rectavalo/sys'
 
 const App = () => {
-  const { isLoading } = useSelector((state) => state.mobilePlatforms)
-  const { loadAppError, loadAppSuccess } = useActions()
+  const { isLoading } = useSelector((state) => state.platforms)
+  const { loadAppError, loadAppSuccess, setCurrentPlatform } = useActions()
   // Initial Loading
   // As a parameter hook can accept loading time , by default is 3s
   // onLoadSuccess and onLoadError callbacks
   useAppLoad(500, loadAppSuccess, loadAppError)
+
+  useEffect(() => {
+    // initialization of the platform
+    setCurrentPlatform(sys.platform())
+  }, [setCurrentPlatform])
 
   useEffect(() => {
     addMessageEventListener(nativeMessage)
@@ -37,7 +36,7 @@ const App = () => {
     return () => {
       removeMessageEventListener(nativeMessage)
     }
-  }, [nativeMessage])
+  }, [])
 
   return <>{isLoading ? <SplashScreen /> : <Commander />}</>
 }

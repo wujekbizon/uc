@@ -28,17 +28,19 @@ export const useCursorHandlers = ({ paneIndex, entries, selectRef, debouncedScro
     return { keyDownHandler, mouseWheelHandler }
   }, [focusedPaneIndex, paneIndex, debouncedScroll, updateCursorPosition, updateScrollCursorPosition, entries])
   useEffect(() => {
+    let ref = selectRef.current
+
     if (focusedPaneIndex === paneIndex) {
       window.addEventListener('keydown', memoizedHandlers.keyDownHandler)
       window.addEventListener('mousewheel', memoizedHandlers.mouseWheelHandler)
-      selectRef?.current?.addEventListener('wheel', (event) => {
+      ref?.addEventListener('wheel', (event) => {
         event.preventDefault()
       })
     }
     return () => {
       window.removeEventListener('keydown', memoizedHandlers.keyDownHandler)
       window.removeEventListener('mousewheel', memoizedHandlers.mouseWheelHandler)
-      selectRef?.current?.removeEventListener('wheel', (event) => {
+      ref.removeEventListener('wheel', (event) => {
         event.preventDefault()
       })
     }

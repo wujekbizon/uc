@@ -8,13 +8,7 @@ import {
   openSettingsModal,
   closeSettingsModal,
 } from './slices/modalsSlice'
-import {
-  mobilePlatformsReducer,
-  enableMobileLayout,
-  disableMobileLayout,
-  loadAppSuccess,
-  loadAppError,
-} from './slices/mobilePlatformsSlice'
+import { platformsReducer, loadAppSuccess, loadAppError, setCurrentPlatform } from './slices/platformsSlice'
 import {
   fileExplorerReducer,
   toggleFocus,
@@ -31,7 +25,7 @@ import { directoryListReducer, addDirectoryToList, fetchDirectoryList } from './
 export const store = configureStore({
   reducer: {
     modals: modalsReducer,
-    mobilePlatforms: mobilePlatformsReducer,
+    platforms: platformsReducer,
     fileExplorers: fileExplorerReducer,
     directoryListsData: directoryListReducer,
   },
@@ -47,8 +41,6 @@ export const actionCreators = {
   closeViewFileModal,
   openSettingsModal,
   closeSettingsModal,
-  enableMobileLayout,
-  disableMobileLayout,
   loadAppSuccess,
   loadAppError,
   toggleFocus,
@@ -61,4 +53,5 @@ export const actionCreators = {
   updateScrollCursorPosition,
   getOppositePaneIndex,
   resetCursorPosition,
+  setCurrentPlatform,
 }
