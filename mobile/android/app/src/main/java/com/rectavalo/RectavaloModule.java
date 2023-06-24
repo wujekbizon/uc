@@ -42,9 +42,11 @@ public final class RectavaloModule
     }
   }
 
+  public static native void setCwd(String path);
   RectavaloModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
+    setCwd(this.reactContext.getApplicationInfo().dataDir);
   }
 
   @Override
