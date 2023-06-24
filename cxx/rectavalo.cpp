@@ -31,6 +31,16 @@ Java_com_rectavalo_RectavaloModule_onMessage(
   env->ReleaseStringUTFChars(messageBody, nativeString);
   return result;
 }
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_rectavalo_RectavaloModule_setCwd(
+        JNIEnv *env,
+        jobject /* this */,
+        jstring path) {
+  const char *_path = env->GetStringUTFChars(path, 0);
+  std::filesystem::current_path(std::string(_path));
+  env->ReleaseStringUTFChars(path, _path);
+}
 #endif
 
 const char* hello() {

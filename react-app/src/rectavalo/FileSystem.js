@@ -9,7 +9,7 @@ const FileSystem = {
     })
 
     if (result.error)
-      throw new Error(result)
+      throw new Error(result.error)
 
     return result.result
    },
