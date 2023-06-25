@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 // custom hooks
 import { useAppLoad } from './hooks/useAppLoad'
 import { useActions } from './hooks/useActions'
+import FileSystem from './rectavalo/FileSystem'
 
 // Components
 import { SplashScreen, Commander } from './components'
@@ -16,16 +17,19 @@ import sys from './rectavalo/sys'
 
 const App = () => {
   const { isLoading } = useSelector((state) => state.platforms)
-  const { loadAppError, loadAppSuccess, setCurrentPlatform } = useActions()
+  const { loadAppError, loadAppSuccess, setCurrentWorkingDirectory, setCurrentPlatform } = useActions()
   // Initial Loading
   // As a parameter hook can accept loading time , by default is 3s
   // onLoadSuccess and onLoadError callbacks
   useAppLoad(500, loadAppSuccess, loadAppError)
 
   useEffect(() => {
+    FileSystem.cwd().then((path) => {
+      setCurrentWorkingDirectory(path)
+    })
     // initialization of the platform
     setCurrentPlatform(sys.platform())
-  }, [setCurrentPlatform])
+  }, [setCurrentWorkingDirectory, setCurrentPlatform])
 
   useEffect(() => {
     addMessageEventListener(nativeMessage)

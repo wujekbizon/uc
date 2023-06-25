@@ -3,13 +3,15 @@
 #include "rectavalo.hpp"
 
 const std::string LIST_DIR = "listdir";
+const std::string CWD = "cwd";
 
 namespace rectavalo::filesystem {
   Json::Value filesystem_onMessage(const std::string fn, const Json::Value json, const std::vector<Json::Value> args) {
     if (fn == LISTDIR) {
       return listdir(json);
-    }
-    else {
+    } else if (fn == CWD) {
+      return cwd(json);
+    } else {
       return unknownRequest(fn);
     }
   }
@@ -18,6 +20,19 @@ namespace rectavalo::filesystem {
   uint64_t unixTime(std::chrono::time_point<Clock> tp) {
     return std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
   }
+
+  Json::Value cwd(const Json::Value json) {
+    Json::Value response;
+
+    try {
+      response["result"] = std::filesystem::current_path().string();
+    } catch (std::runtime_error e) {
+      response["error"] = e.what();
+    }
+
+    return response;
+  }
+
 
   Json::Value listdir(const Json::Value json) {
     Json::Value response;
@@ -29,7 +44,7 @@ namespace rectavalo::filesystem {
 
     try {
 
-    response["pwd"] = std::filesystem::current_path().string();
+    response["cwd"] = std::filesystem::current_path().string();
 
     for (const auto& entry : std::filesystem::directory_iterator(path)) {
       Json::Value result;
