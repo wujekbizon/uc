@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
+  currentWorkingDirectory: null,
   currentPlatform: null,
   isMobilePlatform: false,
   isDesktopPlatform: false,
@@ -22,6 +23,9 @@ const platformsSlice = createSlice({
         state.currentPlatform = payload
       }
     },
+    setCurrentWorkingDirectory(state, { payload }) {
+      state.currentWorkingDirectory = payload
+    },
     loadAppSuccess(state) {
       state.isLoading = false
     },
@@ -32,5 +36,5 @@ const platformsSlice = createSlice({
   },
 })
 
-export const { loadAppSuccess, loadAppError, setCurrentPlatform } = platformsSlice.actions
+export const { loadAppSuccess, loadAppError, setCurrentWorkingDirectory, setCurrentPlatform } = platformsSlice.actions
 export const platformsReducer = platformsSlice.reducer

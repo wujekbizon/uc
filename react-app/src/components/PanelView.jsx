@@ -11,6 +11,7 @@ const PanelView = () => {
   const { focusedPaneIndex, selectedFile, directoryViewCount, oppositePaneIndex } = useSelector(
     (state) => state.fileExplorers
   )
+  const { currentWorkingDirectory  } = useSelector((state) => state.platforms)
   const { directoryListData } = useSelector((state) => state.directoryListsData)
   const { isViewFileModalOpen } = useSelector((state) => state.modals)
   const { openViewFileModal, toggleFocus, fetchDirectoryList, getOppositePaneIndex, resetCursorPosition } = useActions()
@@ -18,8 +19,9 @@ const PanelView = () => {
   // effects
   useEffect(() => {
     // fetching a list of data
-    fetchDirectoryList(directoryViewCount)
-  }, [directoryViewCount, fetchDirectoryList])
+    // todo - This will need to load previous cwd from history for each pane
+    fetchDirectoryList({ directoryViewCount, currentWorkingDirectory })
+  }, [directoryViewCount, fetchDirectoryList, currentWorkingDirectory])
 
   useEffect(() => {
     // we need to run this by Redux to avoid any strange behaviors
@@ -65,7 +67,7 @@ const PanelView = () => {
     ) {
       // refreshPanes(allPanes)
       //  I think we can use this instead
-      fetchDirectoryList(directoryViewCount)
+      fetchDirectoryList({ directoryViewCount, currentWorkingDirectory })
     }
   }
 

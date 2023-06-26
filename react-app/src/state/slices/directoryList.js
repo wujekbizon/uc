@@ -11,7 +11,8 @@ const directoryListSlice = createSlice({
   initialState,
   reducers: {
     fetchDirectoryList: (state, { payload }) => {
-      state.directoryListData = Array.from({ length: payload }, () => new DirectoryListData())
+      // todo - This will need to load previous cwd from history for each pane
+      state.directoryListData = Array.from({ length: payload.directoryViewCount }, () => new DirectoryListData(payload.currentWorkingDirectory))
     },
     addDirectoryToList: (state, { payload }) => {
       state.directoryListData = payload

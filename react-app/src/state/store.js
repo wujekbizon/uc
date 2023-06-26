@@ -8,7 +8,7 @@ import {
   openSettingsModal,
   closeSettingsModal,
 } from './slices/modalsSlice'
-import { platformsReducer, loadAppSuccess, loadAppError, setCurrentPlatform } from './slices/platformsSlice'
+import { platformsReducer, loadAppSuccess, loadAppError, setCurrentWorkingDirectory, setCurrentPlatform } from './slices/platformsSlice'
 import {
   fileExplorerReducer,
   toggleFocus,
@@ -53,5 +53,6 @@ export const actionCreators = {
   updateScrollCursorPosition,
   getOppositePaneIndex,
   resetCursorPosition,
+  setCurrentWorkingDirectory,
   setCurrentPlatform,
 }

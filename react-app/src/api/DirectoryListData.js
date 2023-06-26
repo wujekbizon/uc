@@ -1,6 +1,6 @@
-import { path, process } from '../rectavalo/stubs'
-import FileSystem from '../rectavalo/FileSystem';
+import FileSystem from '../rectavalo/FileSystem'
 import { log } from '../rectavalo/RectavaloWeb'
+import Path from '../rectavalo/Path'
 
 export const SORT_ASCENDING           = 0
 export const SORT_DESCENDING          = 1
@@ -35,7 +35,7 @@ function sortExtension (a, b) {
   let r = sortDirectories(a, b)
   if (r !== undefined) return r
 
-  return path.extname(a.name).localeCompare(path.extname(b.name))
+  return a.ext.localeCompare(b.ext)
 }
 
 function sortSize (a, b) {    
@@ -65,7 +65,7 @@ export default class DirectoryListData {
    * @param {Number} sortDirection - SORT_ASCENDING (default) | SORT_DESCENDING
    * @param {Number} sortMode - FILE_SORT_MODE_NAME (default) | FILE_SORT_MODE_EXT | FILE_SORT_MODE_SIZE | FILE_SORT_MODE_DATE
    */
-  constructor(initialDirectory = process.cwd()) {
+  constructor(initialDirectory) {
     this.currentDirectory = initialDirectory
     this._entries = []
     this._selectedEntries = []
@@ -85,9 +85,9 @@ export default class DirectoryListData {
     // todo (@mribbons): navigate as far as possible even if final path doesn't exist
     const cd = this.currentDirectory;
     if (entry === '..') {
-      return new DirectoryListData(path.dirname(cd))
+      return new DirectoryListData(Path.dirname(cd))
     } else if (entry.isDirectory) {
-      return new DirectoryListData(path.join(cd, entry.name))
+      return new DirectoryListData(Path.join(cd, entry.name))
     } else {
       // todo (@mribbons): cursor should move to file if path ends in file
       return this
@@ -168,7 +168,7 @@ export default class DirectoryListData {
    * @returns {String} - The full path to the file
    */
   fullPath (entry) {
-    return path.join(this._currentDirectory, entry.name)
+    return Path.join(this._currentDirectory, entry.name)
   }
 
   /**
@@ -190,8 +190,8 @@ export default class DirectoryListData {
 
   async copyFile(entry, destFolder) {
     // todo - recursive copy
-    const srcPath = path.join(this.currentDirectory, entry.name)
-    const destPath = path.join(destFolder, entry.name)
+    const srcPath = Path.join(this.currentDirectory, entry.name)
+    const destPath = Path.join(destFolder, entry.name)
 
     console.log(`copy ${srcPath} => ${destPath}`)
 
@@ -211,8 +211,8 @@ export default class DirectoryListData {
   }
 
   async moveFile(entry, destFolder) {
-    const srcPath = path.join(this.currentDirectory, entry.name)
-    const destPath = path.join(destFolder, entry.name)
+    const srcPath = Path.join(this.currentDirectory, entry.name)
+    const destPath = Path.join(destFolder, entry.name)
 
     console.log(`rename ${srcPath} => ${destPath}`)
     console.log(`WARNING - FileSystem.rename not implemented`)
@@ -234,7 +234,7 @@ export default class DirectoryListData {
 
   async deleteFile(entry) {
     // todo - recursive delete
-    const srcPath = path.join(this.currentDirectory, entry.name)
+    const srcPath = Path.join(this.currentDirectory, entry.name)
 
     console.log(`rm ${srcPath}`)
     console.log(`WARNING - FileSystem.rm not implemented`)
@@ -254,20 +254,20 @@ export default class DirectoryListData {
     if (await DirectoryListData.exists(folder)) {
       return
     } else {
-      await DirectoryListData.mkdir(await path.dirname(folder))
+      await DirectoryListData.mkdir(await Path.dirname(folder))
       await FileSystem.mkdir(folder)
     }
   }
 
   async newFolder(name) {
     // calling FileSystem.stat on a subfolder that doesn't exist doesn't return false, check each supplied path one by one
-    const parts = name.split(path.sep)
-    let newPath = path.join(this.currentDirectory)
+    const parts = name.split(Path.sep)
+    let newPath = Path.join(this.currentDirectory)
 
     return new Promise(async (resolve, reject) => {
       try {
         for (let p = 0; p < parts.length; ++p) {
-          newPath = path.join(this.currentDirectory, parts[p])
+          newPath = Path.join(this.currentDirectory, parts[p])
           DirectoryListData.mkdir(newPath)
         }
         resolve(true)
