@@ -29,13 +29,12 @@
     width: 100%;
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    // flex-wrap: wrap;
 
     button {
-      flex: 1;
       height: 20px;
       color: #717cb4;
-      padding: 0 25px;
+      padding: 0 15px;
       cursor: pointer;
       background-color: transparent;
       border: 1px solid #090b10;
@@ -45,6 +44,19 @@
       &:hover {
         background-color: #717cb430;
       }
+    }
+
+    .btn-name {
+      flex: 8;
+    }
+    .btn-extension {
+      flex: 1;
+    }
+    .btn-size {
+      flex: 1;
+    }
+    .btn-date {
+      flex: 2;
     }
   }
 }

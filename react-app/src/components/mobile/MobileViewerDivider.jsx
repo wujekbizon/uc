@@ -3,11 +3,13 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { dividerItems } from '../../data/dividerLinks'
 import { useActions } from '../../hooks/useActions'
+import { BsFillArrowDownSquareFill, BsFillArrowUpSquareFill } from 'react-icons/bs'
 
 // Components
 import { SettingsModal } from '../index'
 
-const MobileViewerDivider = () => {
+const MobileViewerDivider = ({ handleTogglePanes }) => {
+  const { focusedPaneIndex } = useSelector((state) => state.fileExplorers)
   const { isSettingsModalOpen } = useSelector((state) => state.modals)
   const { openSettingsModal } = useActions()
   const [active, setActive] = useState(null)
@@ -33,6 +35,10 @@ const MobileViewerDivider = () => {
         break
     }
   }
+  const handleClick = (event) => {
+    console.log('tab press simulate')
+    handleTogglePanes(event)
+  }
 
   return (
     <div className="mobile_divider">
@@ -44,6 +50,12 @@ const MobileViewerDivider = () => {
           <span className="icon-text">{text}</span>
         </div>
       ))}
+
+      {focusedPaneIndex === 0 ? (
+        <BsFillArrowDownSquareFill className="arrow" onClick={handleClick} />
+      ) : (
+        <BsFillArrowUpSquareFill className="arrow" onClick={handleClick} />
+      )}
 
       {isSettingsModalOpen && <SettingsModal />}
     </div>

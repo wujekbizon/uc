@@ -2,14 +2,13 @@ import './MobilePanelView.scss'
 import React, { useEffect, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { useActions } from '../../hooks/useActions'
-import { BsFillArrowDownSquareFill, BsFillArrowUpSquareFill } from 'react-icons/bs'
 // Components
 import { MobileDirectoryListViewer, MobileViewerDivider } from './index'
 import ViewFileModal from '../ViewFileModal'
 
 const MobilePanelView = () => {
   const { focusedPaneIndex, directoryViewCount } = useSelector((state) => state.fileExplorers)
-  const { currentWorkingDirectory  } = useSelector((state) => state.platforms)
+  const { currentWorkingDirectory, currentPlatform } = useSelector((state) => state.platforms)
   const { directoryListData } = useSelector((state) => state.directoryListsData)
   const { isViewFileModalOpen } = useSelector((state) => state.modals)
   const { toggleFocus, fetchDirectoryList, getOppositePaneIndex, resetCursorPosition } = useActions()
@@ -34,22 +33,12 @@ const MobilePanelView = () => {
     toggleFocus(nextIndex)
   }
 
-  const handleClick = (event) => {
-    console.log('tab press simulate')
-    togglePanes(event)
-  }
-
   return (
-    <section className="mobile_panel-view">
+    <section className={`${currentPlatform === 'ios' ? 'safety-view-ios' : ''} mobile_panel-view`}>
       {directoryListData?.map((data, index) => (
         <Fragment key={index}>
           <MobileDirectoryListViewer data={data} paneIndex={index} />
-          {index !== directoryListData.length - 1 && <MobileViewerDivider />}
-          {focusedPaneIndex % 2 ? (
-            <BsFillArrowUpSquareFill className="icon" onClick={handleClick} />
-          ) : (
-            <BsFillArrowDownSquareFill className="icon" onClick={handleClick} />
-          )}
+          {index !== directoryListData.length - 1 && <MobileViewerDivider handleTogglePanes={togglePanes} />}
         </Fragment>
       ))}
       {isViewFileModalOpen && <ViewFileModal viewData={directoryListData[focusedPaneIndex]} />}

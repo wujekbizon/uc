@@ -7,7 +7,7 @@ import { useCursorHandlers } from '../hooks/useCursorHandlers'
 
 // Components
 import { DirectoryListViewerBar, DirectoryEntry } from './index'
-import DirectoryListData, { FILE_SORT_MODE_DATE, SORT_DESCENDING } from '../api/DirectoryListData'
+import { FILE_SORT_MODE_DATE, SORT_DESCENDING } from '../api/DirectoryListData'
 
 /**
  *

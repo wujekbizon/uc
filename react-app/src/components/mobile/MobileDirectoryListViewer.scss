@@ -40,6 +40,44 @@
     &:hover {
       background-color: rgba(113, 124, 180, 0.5);
     }
+
+    .icon {
+      font-size: 13px;
+      margin-right: 2px;
+    }
+
+    .name-container {
+      display: flex;
+      align-items: center;
+      flex: 6.5;
+
+      h4 {
+        color: aliceblue;
+      }
+
+      span {
+        color: #f1bea3;
+      }
+    }
+    .ext-container {
+      flex: 1.3;
+      span {
+        color: #745f8a;
+        font-size: 9px;
+      }
+    }
+    .size-container {
+      flex: 1.4;
+      font-size: 9px;
+      span {
+        color: #f49867;
+        font-size: 9px;
+      }
+    }
+    .date-container {
+      flex: 2;
+      font-size: 9px;
+    }
   }
 
   .file-selected {

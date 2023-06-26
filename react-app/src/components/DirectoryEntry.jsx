@@ -47,6 +47,19 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
     }
   }
 
+  // converting to human readable date
+  const date = new Date(entry?.mtime)
+  const options = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hourCycle: 'h12',
+  }
+
+  const humanReadableDate = date.toLocaleString('en', options)
+
   return (
     <>
       {entry === '..' && (
@@ -66,7 +79,14 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
           onKeyDown={handleKeyDown}
           onDoubleClick={handleClick}
         >
-          <FcFolder /> [{entry.name}]
+          <div className="name-container">
+            <FcFolder className="icon" /> <span>[</span> <h4>{entry.name}</h4> <span>]</span>
+          </div>
+          <div className="ext-container" />
+          <div className="size-container">
+            <span>{`<DIR>`}</span>
+          </div>
+          <div className="date-container">{humanReadableDate}</div>
         </div>
       )}
       {typeof entry !== 'string' && !entry.isDirectory && (
@@ -76,7 +96,14 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
           onKeyDown={handleKeyDown}
           onClick={handleClick}
         >
-          <FcFile /> {entry.name}
+          <div className="name-container">
+            <FcFile className="icon" /> <h4>{entry?.name}</h4>
+          </div>
+          <div className="ext-container">
+            <span>{entry?.ext}</span>
+          </div>
+          <div className="size-container">{entry?.size}kb</div>
+          <div className="date-container">{humanReadableDate}</div>
         </div>
       )}
     </>
