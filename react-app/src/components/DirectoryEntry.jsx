@@ -50,12 +50,12 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
   // converting to human readable date
   const date = new Date(entry?.mtime)
   const options = {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
+    year: '2-digit',
+    month: '2-digit',
+    day: '2-digit',
     hour: 'numeric',
     minute: 'numeric',
-    hourCycle: 'h12',
+    hourCycle: 'h24',
   }
 
   const humanReadableDate = date.toLocaleString('en', options)
@@ -80,12 +80,10 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
           onDoubleClick={handleClick}
         >
           <div className="name-container">
-            <FcFolder className="icon" /> <span>[</span> <h4>{entry.name}</h4> <span>]</span>
+            <FcFolder className="icon" />[{entry.name}]
           </div>
           <div className="ext-container" />
-          <div className="size-container">
-            <span>{`<DIR>`}</span>
-          </div>
+          <div className="size-container">{`<DIR>`}</div>
           <div className="date-container">{humanReadableDate}</div>
         </div>
       )}
