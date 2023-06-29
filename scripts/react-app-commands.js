@@ -1,38 +1,20 @@
 import * as buildConstants from './build-constants.js'
-import { spawn } from 'node:child_process'
-import { withSuffix, recursedir } from './helpers.js'
+import { withSuffix, spawnSync, recursedir } from './helpers.js'
 import * as fs from "node:fs/promises"
 import Path from 'node:path'
-import { argv } from 'node:process'
 
 const buildWebApp = async () => {
-  const child = spawn(withSuffix('npm'), ['run', 'build'], { cwd: buildConstants.reactApp })
-
-  const output = []
-
-  child.stderr.on('data', (data) => {
-    console.log(data.toString())
-  })
-
-  child.stdout.on('data', (data) => {
-    output.push(data)
-  })
-
-  child.on('close', (code) => {
-    console.log(`child exited with: ${code}`)
-    if (code != 0) {
-      output.forEach(line => {
-        buildConstants.log(line.toString())
-      })
-    }
-  })
+  const { exitCode } = await spawnSync({bin: withSuffix('npm'), cwd: buildConstants.reactApp}, 'run', 'build')
+  return exitCode
 }
 
 const xformWebApp = async (argv) => {
   console.info(argv)
   console.log(`${buildConstants.reactAppBuild} => ${buildConstants.reactAppXform}`)
 
-  recursedir(buildConstants.reactAppBuild, async (path, data, entry) => {
+  await fs.rmdir(buildConstants.reactAppXform)
+
+  await recursedir(buildConstants.reactAppBuild, async (path, data, entry) => {
     const src = Path.join(path, entry.name)
     const dest = src.replace(buildConstants.reactAppBuild, buildConstants.reactAppXform)
     await fs.mkdir(Path.dirname(dest), { recursive: true })
@@ -47,6 +29,8 @@ const xformWebApp = async (argv) => {
     }
     await fs.writeFile(dest, contents)
   }, {})
+
+  return 0
 }
 
 const buildAppWin32 = async(argv) => {
