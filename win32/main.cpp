@@ -75,7 +75,13 @@ int CALLBACK WinMain(
 		std::wstring fsPath;
 		fsPath.append(L"file:///");
 		fsPath.append(utf8_decode(std::filesystem::current_path().string()));
+
+#ifdef _DEBUG
 		fsPath.append(L"/boot.html");
+#else
+		fsPath.append(L"/index.html");
+#endif
+
 		wcscpy_s(url, 1024, fsPath.c_str());
 	}
 

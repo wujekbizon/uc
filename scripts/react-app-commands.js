@@ -49,7 +49,7 @@ const buildAppWin32 = async(argv) => {
     await fs.rm(packagePath, { recursive: true, force: true })
 
   await recursedir(buildPath, async (path, data, entry) => {
-    if (entry.name.endsWith(".exe") || entry.name.endsWith(".dll") || entry.name.endsWith(".html")) {
+    if (entry.name.endsWith(".exe") || entry.name.endsWith(".dll")) {
       const src = Path.join(path, entry.name)
       const dest = src.replace(buildPath, packagePath)
       
