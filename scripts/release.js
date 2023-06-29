@@ -12,7 +12,7 @@ yargs(hideBin(process.argv))
     exit(await xformWebApp(argv))
   })
   .command('build-app <platform> [<host>]', 'Builds app for a specific <platform> using ssh <host>. Outputs to _build/<platform>', () => {}, async (argv) => {
-    console.info(argv)
+    exit(await buildApp(argv))
   })
   .demandCommand(1)
   .parse()

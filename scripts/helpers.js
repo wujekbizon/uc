@@ -1,5 +1,5 @@
 import os from 'node:os'
-import { spawn } from 'node:child_process'
+import { spawn as node_spawn } from 'node:child_process'
 import * as fs from "node:fs/promises"
 import * as Path from "node:path"
 
@@ -9,13 +9,16 @@ const win32Suffixes = {
 
 const withSuffix = (command) => {
   if (os.platform() !== 'win32')
-    return
+    return command
 
-    if (win32Suffixes !== undefined) {
-      return `${command}.${win32Suffixes[command]}`
-    }
+  if (command.endsWith('.exe') || command.endsWith('.bat') || command.endsWith('.cmd') || command.endsWith('.ps1'))
+    return cmd
 
-    return `${command}.exe`
+  if (win32Suffixes[command] !== undefined) {
+    return `${command}.${win32Suffixes[command]}`
+  }
+
+  return `${command}.exe`
 }
 
 /**
@@ -41,7 +44,7 @@ const withSuffix = (command) => {
  * @param  {...any} args - command line arguments
  * @returns 
  */
-const spawnSync = async(opts, ...args) => {
+const spawn = async(opts, ...args) => {
   const bin = opts.bin ?? undefined
   const cwd = opts.cwd ?? undefined
   const logErr = opts.cwd !== false
@@ -50,7 +53,7 @@ const spawnSync = async(opts, ...args) => {
     throw new Error('opts.bin must be defined.')
   }
 
-  const child = spawn(opts.bin, args, {cwd})
+  const child = node_spawn(opts.bin, args, {cwd})
   const out = []
   const err = []
 
@@ -94,4 +97,13 @@ const recursedir = async (path, cb, data) => {
   return data
 }
 
-export { withSuffix, recursedir, spawnSync }
+export const exists = async (path) => {
+  try {
+    await fs.access(path)
+    return true
+  } catch (_) {
+    return false
+  }
+}
+
+export { withSuffix, recursedir, spawn }

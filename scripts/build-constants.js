@@ -1,8 +1,7 @@
 import Path from 'node:path'
 
-const reactApp = 'react-app'
-const reactAppBuild = Path.join(reactApp, 'build')
-const build = '_build'
-const reactAppXform = Path.join(build, 'static_html')
-
-export { reactApp, reactAppBuild, build, reactAppXform }
+export const reactApp = 'react-app'
+export const reactAppBuild = Path.join(reactApp, 'build')
+export const build = '_build'
+export const reactAppXform = Path.join(build, 'static_html')
+export const win32sln = `win32\\Win32WebView.sln`
