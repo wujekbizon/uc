@@ -12,7 +12,7 @@ const xformWebApp = async (argv) => {
   console.info(argv)
   console.log(`${buildConstants.reactAppBuild} => ${buildConstants.reactAppXform}`)
 
-  await fs.rmdir(buildConstants.reactAppXform)
+  await fs.rm(buildConstants.reactAppXform, { recursive: true, force: true })
 
   await recursedir(buildConstants.reactAppBuild, async (path, data, entry) => {
     const src = Path.join(path, entry.name)
@@ -29,6 +29,8 @@ const xformWebApp = async (argv) => {
     }
     await fs.writeFile(dest, contents)
   }, {})
+
+  await fs.writeFile(Path.join(buildConstants.reactAppXform, 'build.time'), Math.round(Date.now()/1000).toString())
 
   return 0
 }
@@ -71,8 +73,37 @@ const buildAppWin32 = async(argv) => {
   return 0
 }
 
+const buildAppAndroid = async() => {
+  const packagePath = Path.join(buildConstants.androidAssets, buildConstants.staticAssets)
+  if (await exists(packagePath))
+    await fs.rm(packagePath, { recursive: true, force: true })
+
+  await recursedir(buildConstants.reactAppXform, async (path, data, entry) => {
+    const src = Path.join(path, entry.name)
+    const dest = src.replace(buildConstants.reactAppXform, packagePath)
+    
+    console.log(`copy ${src} => ${dest}`)
+    await fs.mkdir(Path.dirname(dest), { recursive: true })
+    await fs.copyFile(src, dest)
+  })
+
+  const androidBuildPath = Path.join(buildConstants.mobile, 'android')
+  const gradlewResult = await spawn({bin: withSuffix('gradlew'), cwd: androidBuildPath}, 'assembleRelease')
+
+  console.log(gradlewResult.stdout)
+
+  if (gradlewResult.exitCode !== 0)
+    return gradlewResult.exitCode;
+
+  // todo - install & launch if arg present
+  console.log(`cd ${androidBuildPath} && ${Path.join(process.env.ANDROID_HOME, 'platform-tools', withSuffix('adb'))} install  ${Path.join('app', 'build', 'outputs', 'apk', 'release', 'app-release.apk')}`)
+
+  return 0
+}
+
 const platformBuildMap = {
-  win32: buildAppWin32
+  win32: buildAppWin32,
+  android: buildAppAndroid
 }
 
 const buildApp = async(argv) => {

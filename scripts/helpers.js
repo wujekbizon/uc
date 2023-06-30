@@ -4,7 +4,9 @@ import * as fs from "node:fs/promises"
 import * as Path from "node:path"
 
 const win32Suffixes = {
-  'npm': 'cmd'
+  'npm': 'cmd',
+  'npx': 'cmd',
+  'gradlew': 'bat'
 }
 
 const withSuffix = (command) => {
@@ -47,13 +49,17 @@ const withSuffix = (command) => {
 const spawn = async(opts, ...args) => {
   const bin = opts.bin ?? undefined
   const cwd = opts.cwd ?? undefined
+  const env = opts.env ?? undefined
   const logErr = opts.cwd !== false
   
   if (!bin) {
     throw new Error('opts.bin must be defined.')
   }
 
-  const child = node_spawn(opts.bin, args, {cwd})
+  if (env) {
+    Object.assign(env, process.env)
+  }
+  const child = node_spawn(opts.bin, args, {cwd, env})
   const out = []
   const err = []
 
