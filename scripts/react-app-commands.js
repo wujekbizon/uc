@@ -101,9 +101,80 @@ const buildAppAndroid = async() => {
   return 0
 }
 
+const buildIOSApp = async(argv) => {
+  // not for building in xcode: these can be set in ./mobile/ios/Pods/Target Support Files/Pods-mobile/Pods-mobile.[configuration].xcconfig
+  // don't set them in project.pbxproj!
+  const DEVELOPMENT_TEAM = 'DEVELOPMENT_TEAM'
+  const PRODUCT_BUNDLE_IDENTIFIER = 'PRODUCT_BUNDLE_IDENTIFIER'
+  let fail = false
+
+  if (!process.env[DEVELOPMENT_TEAM]) {
+    console.error(`${DEVELOPMENT_TEAM} must be set at as an environment variable.`)
+    fail = true
+  }
+
+  if (!process.env[PRODUCT_BUNDLE_IDENTIFIER]) {
+    console.error(`${PRODUCT_BUNDLE_IDENTIFIER} must be set at as an environment variable.`)
+    fail = true
+  }
+
+  if (fail)
+    return 1
+
+  const iosBuildPath = Path.join(buildConstants.mobile, 'ios')
+  // const bundleResult = await spawn({bin: withSuffix('bundle'), cwd: iosBuildPath}, 'exec', 'pod', 'install')
+  // if (bundleResult.exitCode != 0)
+  //   return bundleResult.exitCode
+
+  const archivePath = Path.resolve(Path.join(buildConstants.build, 'mobile.xcarchive'))
+
+  // this doesn't work: 
+  // mobile has conflicting provisioning settings. mobile is automatically signed, but code signing identity "Apple Development" has been manually specified. Set the code signing identity value to "Apple Development" in the build settings editor, or switch to manual signing in the Signing & Capabilities editor
+  const archiveArgs = [
+    '-workspace', 'mobile.xcworkspace', 
+    '-scheme', 'mobile', 'clean', 'archive', 
+    '-sdk', 'iphoneos', 
+    `PRODUCT_BUNDLE_IDENTIFIER=${process.env[PRODUCT_BUNDLE_IDENTIFIER]}`, 
+    '-archivePath', archivePath, 
+    `DEVELOPMENT_TEAM=${process.env[DEVELOPMENT_TEAM]}`,
+    ...buildConstants.iosArchiveArgs
+  ]
+
+  const xcodeArchiveResult = await spawn({bin: withSuffix('xcodebuild'), cwd: iosBuildPath}, ...archiveArgs)
+  if (xcodeArchiveResult.exitCode != 0)
+    return xcodeArchiveResult.exitCode
+
+  const exportPath = Path.resolve(Path.join(buildConstants.build, `${process.env[PRODUCT_BUNDLE_IDENTIFIER]}.ipa`))
+  const exportOptionsPath = Path.resolve(Path.join(buildConstants.build, 'iosExportOptions.plist'))
+
+  await fs.writeFile(exportOptionsPath, buildConstants.iosExportPlist)
+  const exportArgs = [
+    '-exportArchive',
+    '-archivePath', archivePath,
+    '-exportPath', exportPath,
+    '-exportOptionsPlist', exportOptionsPath
+  ]
+
+  const xcodeExportResult = await spawn({bin: withSuffix('xcodebuild'), cwd: iosBuildPath}, ...exportArgs)
+  if (xcodeExportResult.exitCode != 0)
+    return xcodeExportResult.exitCode
+
+  console.log(`app export created at ${exportPath}`)
+
+
+  // const npxResult = await spawn({bin: withSuffix('npx'), cwd: buildConstants.mobile}, 'react-native', 'build-ios', '--mode=Release')
+  // console.log(npxResult.stdout)
+
+  // if (npxResult.exitCode != 0)
+  //   return npxResult.exitCode
+
+  return 0
+}
+
 const platformBuildMap = {
   win32: buildAppWin32,
-  android: buildAppAndroid
+  android: buildAppAndroid,
+  ios: buildIOSApp
 }
 
 const buildApp = async(argv) => {

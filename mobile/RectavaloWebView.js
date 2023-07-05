@@ -32,6 +32,8 @@ export default class RectavaloWebView extends Component {
         ref={WEBVIEW_REF => (webViewRef = WEBVIEW_REF)}
         style={{ height: "100%" }}
         source={{ uri: this.props.url }}
+        originWhitelist={['file://*', 'http://*', 'https://*']}
+        allowFileAccess={true}
         startInLoadingState={true}
         onMessage={onMessage}
       />

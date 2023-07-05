@@ -50,6 +50,10 @@ const Rectavalo = {
   nativeCallWithBuild: async (fn: string, ...args: Array<any>) => {
     const messageBody = JSON.stringify({fn, args})
     return Rectavalo.nativeCall(messageBody)
+  },
+
+  sourceURLForWebView: async function(): Promise<string> {
+    return RectavaloModule.sourceURLForWebView("")
   }
 };
 
