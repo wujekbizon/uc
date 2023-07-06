@@ -46,7 +46,6 @@ public final class RectavaloModule
   RectavaloModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
-    setCwd(this.reactContext.getApplicationInfo().dataDir);
   }
 
   @Override
@@ -85,7 +84,15 @@ public final class RectavaloModule
     // }
   }
 
-  @ReactMethod void init(final Promise promise) {
+  @ReactMethod void init(String messageBody, final Promise promise) {
+    //getFilesDir
+    String path = this.reactContext.getApplicationInfo().dataDir;
+
+    if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
+      // todo - watch for storage state changes
+      path = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
+    setCwd(path);
     final WritableMap response = Arguments.createMap();
     copyAssets(response);
     promise.resolve(response);

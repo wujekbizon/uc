@@ -83,6 +83,7 @@ export default class DirectoryListData {
   traverse(entry) {
     // todo (@mribbons): support relative path, full path, split by dir sep
     // todo (@mribbons): navigate as far as possible even if final path doesn't exist
+    // todo: check process can access path before changing
     const cd = this.currentDirectory;
     if (entry === '..') {
       return new DirectoryListData(Path.dirname(cd))
