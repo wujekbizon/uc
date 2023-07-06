@@ -30,12 +30,12 @@ To fix this issue try these steps:
 
 const Rectavalo = {
   init: async function(): Promise<String> {
-    return await RectavaloModule.init();
+    return RectavaloModule.init("")
   },
   /**
    */
   hello: async function(): Promise<String> {
-    return await RectavaloModule.hello("");
+    return await RectavaloModule.hello("")
   },
 
   /**
@@ -44,7 +44,7 @@ const Rectavalo = {
    * @returns 
    */
   nativeCall: async function(messageBody: string): Promise<string> {
-    return await RectavaloModule.nativeCall(messageBody);
+    return await RectavaloModule.nativeCall(messageBody)
   },
 
   nativeCallWithBuild: async (fn: string, ...args: Array<any>) => {

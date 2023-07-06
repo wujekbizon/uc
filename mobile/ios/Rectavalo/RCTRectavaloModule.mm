@@ -1,4 +1,7 @@
 // RCTRectavaloModule.m
+#include <iostream>
+#include <fstream>
+#include <filesystem>
 #import "RCTRectavaloModule.h"
 #include <rectavalo.hpp>
 
@@ -6,6 +9,22 @@
 
 // To export a module named RCTRectavaloModule
 RCT_EXPORT_MODULE(Rectavalo);
+
+RCT_EXPORT_METHOD(init: (NSString*)message_body resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  // note to read files outside app documents:
+  // https://developer.apple.com/documentation/uikit/view_controllers/providing_access_to_directories?language=objc
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSString *documentsDirectory = [paths objectAtIndex:0];
+  std::filesystem::current_path(std::string([documentsDirectory UTF8String]));
+
+  if (!std::filesystem::exists("README.1st")) {
+    std::ofstream note("README.1st");
+    note << "Welcome to Ultimate Commander on iOS!\nCurrently we're stuck in the app document folder.";
+    note.close();
+  }
+  
+  resolve(@{@"result": @"Ok"});
+}
 
 RCT_EXPORT_METHOD(sourceURLForWebView: (NSString*)message_body resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSString* response_ns;

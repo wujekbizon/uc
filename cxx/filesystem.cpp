@@ -24,6 +24,10 @@ namespace rectavalo::filesystem {
   Json::Value cwd(const Json::Value json) {
     Json::Value response;
 
+    if (json["cwd"].type() == Json::stringValue) {
+      std::filesystem::current_path(json["cwd"].asString());
+    }
+
     try {
       response["result"] = std::filesystem::current_path().string();
     } catch (std::runtime_error e) {

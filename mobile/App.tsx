@@ -13,11 +13,19 @@ import Rectavalo from './Rectavalo'
 function App(): JSX.Element {
   const [url, setUrl] = useState<String|undefined>('')
   const [error, setError] = useState<String|undefined>()
+  const [initDone, setInitDone] = useState(false)
 
   // @ts-ignore
   const node_env = process.env.NODE_ENV
 
   useEffect(() => {
+    Rectavalo.init().then(() => setInitDone(() => { return true }))
+  }, [])
+
+  useEffect(() => {
+    if (!initDone)
+      return
+
     try {      
       // @ts-ignore
       const staticPefix = Platform.select({
@@ -61,7 +69,7 @@ function App(): JSX.Element {
       return `${e.message}\n${e.stack}`
     })
   }
-  }, [])
+  }, [initDone])
 
   if (error) {
     return <pre>{error}</pre>
