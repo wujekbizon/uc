@@ -22,10 +22,6 @@ DerivedData
 *.xcuserstate
 ios/.xcode.env.local
 
-*.log
-.vscode
-.vs
-
 # Android/IntelliJ
 #
 build/
@@ -66,39 +62,4 @@ yarn-error.log
 # Temporary files created by Metro to check the health of the file watcher
 .metro-health-check*
 
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# production
-/build
-
-# misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log* 
-.vs
-x64
-packages
-
-# cmake generated
-_build/
-
-mobile/ios/Rectavalo/**/*.hpp
-mobile/ios/Rectavalo/**/*.h
-mobile/ios/Rectavalo/**/*.cpp
-!mobile/ios/Rectavalo/*Module.h
-.env*.js
-boot.html
+.env.js

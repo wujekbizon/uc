@@ -1,0 +1,67 @@
+.mobile_divider {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  .icon-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border: 1px solid #0f111a;
+    cursor: pointer;
+
+    &:hover {
+      border: 1px solid #292d3e;
+      background-color: #090b10;
+    }
+
+    .icon {
+      font-size: 22px;
+      color: #eeffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-text {
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      bottom: -20px;
+      left: -11px;
+      right: 0;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 0;
+      background: transparent;
+    }
+
+    &:hover .icon-text {
+      width: 52px;
+      height: 15px;
+      overflow: visible;
+      background-color: #090b10;
+      border: 1px solid #292d3e;
+    }
+  }
+
+  .active {
+    background-color: #090b10;
+    border: 1px solid #292d3e;
+  }
+}
+
+.arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #090b10;
+  font-size: 20px;
+}
