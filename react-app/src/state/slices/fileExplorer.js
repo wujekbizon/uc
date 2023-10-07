@@ -7,7 +7,7 @@ const initialState = {
   isSelected: false,
   isFocused: [true, false],
   directoryViewCount: 2,
-  cursorOver: 0,
+  cursorOver: [0, 0],
   entries: ['[..]'],
 }
 
@@ -35,22 +35,24 @@ const fileExplorerSlice = createSlice({
     },
     // set selected file
     setSelectedFile: (state, { payload }) => {
+      const { entry, entryIndex } = payload
       state.isSelected = true
-      state.selectedFile = payload
+      state.cursorOver[state.focusedPaneIndex] = entryIndex
+      state.selectedFile = { entry }
     },
     updateCursorPosition: (state, { payload }) => {
       if (payload.direction === 'UP') {
-        state.cursorOver = Math.max(state.cursorOver - 1, 0)
+        state.cursorOver[state.focusedPaneIndex] = Math.max(state.cursorOver[state.focusedPaneIndex] - 1, 0)
       }
       if (payload.direction === 'DOWN') {
-        state.cursorOver = Math.min(state.cursorOver + 1, payload.entries.length - 1)
+        state.cursorOver[state.focusedPaneIndex] = Math.min(state.cursorOver[state.focusedPaneIndex] + 1, payload.entries.length - 1)
       }
     },
     updateScrollCursorPosition: (state, { payload }) => {
-      state.cursorOver = Math.max(Math.min(state.cursorOver + payload.cursorDelta, payload.entries.length - 1), 0)
+      state.cursorOver = Math.max(Math.min(state.cursorOver[state.focusedPaneIndex] + payload.cursorDelta, payload.entries.length - 1), 0)
     },
     resetCursorPosition: (state) => {
-      state.cursorOver = 0
+      state.cursorOver = [0, 0]
     },
   },
 })

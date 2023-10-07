@@ -17,40 +17,33 @@ export const FILE_SORT_MODE_DATE      = 5
    * @returns 
    */
 function sortDirectories (a, b) {
-  if (a.isDirectory && b.isDirectory) return a.name.localeCompare(b.name)
-  // always sort directories to top
-  if (a.isDirectory || b.isDirectory) return 1
+  if (a.isDirectory && b.isDirectory) {
+    if (a.mtime === 0 || b.mtime === 0)
+      // sort by name if either timestamps have no timestamp
+      return sortName(a, b)
+  }
+  if (a.isDirectory &&  !b.isDirectory) return -1;
 
-  return undefined;
+  return 1;
 }
 
 function sortName (a, b) {
-  let r = sortDirectories(a, b)
-  if (r !== undefined) return r
-
   return a.name.localeCompare(b.name)
 }
 
 function sortExtension (a, b) {
-  let r = sortDirectories(a, b)
-  if (r !== undefined) return r
-
   return a.ext.localeCompare(b.ext)
 }
 
-function sortSize (a, b) {    
-  let r = sortDirectories(a, b)
-  if (r !== undefined) return r
+function sortSize (a, b) {
   if (a.size > b.size) return 1;
   if (b.size > a.size) return -1;
   return 0
 }
 
-function sortDate (a, b) {    
-  let r = sortDirectories(a, b)
-  if (r !== undefined) return r
-  if (a.mtimeMs > b.mtimeMs) return 1;
-  if (b.mtimeMs > a.mtimeMs) return -1;
+function sortDate (a, b) {
+  if (a.mtime > b.mtime) return 1;
+  if (b.mtime > a.mtime) return -1;
   return 0
 }
 
@@ -114,7 +107,6 @@ export default class DirectoryListData {
     try {
       const results = (await FileSystem.ls(this._currentDirectory, { withFileTypes: true }))
       entries = results.map(entry => { 
-        entry.birthtimeMs = entry.mtimeMs = entry.mtime
         entry.isDirectory = entry.dir;
         return entry;
       })
@@ -133,7 +125,6 @@ export default class DirectoryListData {
    * @param {Array} entries 
    */
   sort(entries) {
-
     switch (this.sortMode) {
       case FILE_SORT_MODE_NAME:
         entries.sort(sortName)
@@ -154,6 +145,8 @@ export default class DirectoryListData {
     if (this.sortDirection === SORT_DESCENDING)
       entries = entries.reverse()
 
+    // todo(@mribbons): this should be optional
+    entries.sort(sortDirectories)
     return entries
   }
 

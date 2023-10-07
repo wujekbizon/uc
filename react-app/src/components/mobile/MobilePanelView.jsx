@@ -28,7 +28,6 @@ const MobilePanelView = () => {
 
   const togglePanes = (event) => {
     event.preventDefault()
-    resetCursorPosition()
     const nextIndex = (focusedPaneIndex + 1) % directoryViewCount
     toggleFocus(nextIndex)
   }

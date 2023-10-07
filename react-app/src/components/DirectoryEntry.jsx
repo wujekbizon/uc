@@ -18,26 +18,36 @@ import { traverseDirectory } from '../helpers/fileSystem'
 const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
   const { focusedPaneIndex, cursorOver } = useSelector((state) => state.fileExplorers)
   const { directoryListData } = useSelector((state) => state.directoryListsData)
-  const { setSelectedFile, addDirectoryToList } = useActions()
+  const { setFocus, setSelectedFile, addDirectoryToList } = useActions()
 
-  const cursor_over = focusedPaneIndex === paneIndex && entryIndex === cursorOver
+  const cursor_over = focusedPaneIndex === paneIndex && entryIndex === cursorOver[paneIndex]
 
   // useCallback used to memoize callback functions to prevent unnecessary
   // re-renders caused by passing new functions down to child components on each render.
   const onEntryAction = useCallback(
-    (viewerIndex, entry) => {
+    (entry) => {
+      setFocus(paneIndex)
+      setSelectedFile({entry, entryIndex})
+    },
+    [setSelectedFile]
+  )
+
+  const onEntryDoubleClickAction = useCallback(
+      (viewerIndex, entry) => {
       if (entry === '..' || entry.isDirectory) {
         const newDirectory = traverseDirectory(viewerIndex, entry, directoryListData)
         addDirectoryToList(newDirectory)
-      } else {
-        setSelectedFile(entry)
       }
     },
-    [addDirectoryToList, directoryListData, setSelectedFile]
+    [addDirectoryToList, directoryListData]
   )
 
+  const handleDoubleClick = () => {
+    onEntryDoubleClickAction(paneIndex, entry)
+  }
+
   const handleClick = () => {
-    onEntryAction(paneIndex, entry)
+    onEntryAction(entry)
   }
 
   const handleKeyDown = (event) => {
@@ -47,18 +57,8 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
     }
   }
 
-  // converting to human readable date
   const date = new Date(entry?.mtime)
-  const options = {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-    hour: 'numeric',
-    minute: 'numeric',
-    hourCycle: 'h24',
-  }
-
-  const humanReadableDate = date.toLocaleString('en', options)
+  const humanReadableDate = entry?.mtime > 0 ? date.toLocaleDateString() + ' ' + date.toLocaleTimeString(undefined, {hourCycle: 'h24', hour: 'numeric', minute: 'numeric'}) : ''
 
   return (
     <>
@@ -67,7 +67,8 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
           className={`file-container ${cursor_over ? 'file-cursor-over' : ''}`}
           tabIndex={0}
           onKeyDown={handleKeyDown}
-          onDoubleClick={handleClick}
+          onClick={handleClick}
+          onDoubleClick={handleDoubleClick}
         >
           <ImArrowUp /> [..]
         </div>
@@ -77,7 +78,8 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
           className={`file-container ${cursor_over ? 'file-cursor-over' : ''}`}
           tabIndex={0}
           onKeyDown={handleKeyDown}
-          onDoubleClick={handleClick}
+          onClick={handleClick}
+          onDoubleClick={handleDoubleClick}
         >
           <div className="name-container">
             <FcFolder className="icon" />[{entry.name}]

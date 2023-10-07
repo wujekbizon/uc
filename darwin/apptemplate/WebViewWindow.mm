@@ -78,7 +78,6 @@ static NSString *RequestURL = @"";
                       NSLog(@"Error: %@", error.localizedDescription);
                       return;
                   }
-                  NSLog(@"Result: %@", result);
               }];
 }
 
