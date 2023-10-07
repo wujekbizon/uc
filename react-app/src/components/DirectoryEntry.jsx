@@ -46,19 +46,8 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
       onEntryAction(paneIndex, entry)
     }
   }
-
-  // converting to human readable date
-  const date = new Date(entry?.mtime)
-  const options = {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-    hour: 'numeric',
-    minute: 'numeric',
-    hourCycle: 'h24',
-  }
-
-  const humanReadableDate = date.toLocaleString('en', options)
+  const date = new Date(entry?.mtime * 1000)
+  const humanReadableDate = entry?.mtime > 0 ? date.toLocaleDateString() + ' ' + date.toLocaleTimeString(undefined, {hourCycle: 'h24', hour: 'numeric', minute: 'numeric'}) : ''
 
   return (
     <>
