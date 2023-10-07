@@ -20,7 +20,7 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
   const { directoryListData } = useSelector((state) => state.directoryListsData)
   const { setFocus, setSelectedFile, addDirectoryToList } = useActions()
 
-  const cursor_over = focusedPaneIndex === paneIndex && entryIndex === cursorOver
+  const cursor_over = focusedPaneIndex === paneIndex && entryIndex === cursorOver[paneIndex]
 
   // useCallback used to memoize callback functions to prevent unnecessary
   // re-renders caused by passing new functions down to child components on each render.
