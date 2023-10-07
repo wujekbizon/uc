@@ -18,7 +18,7 @@ export const FILE_SORT_MODE_DATE      = 5
    */
 function sortDirectories (a, b) {
   if (a.isDirectory && b.isDirectory) {
-    if (a.mtimeMs === 0 || b.mtimeMs === 0)
+    if (a.mtime === 0 || b.mtime === 0)
       // sort by name if either timestamps have no timestamp
       return sortName(a, b)
   }
@@ -42,8 +42,8 @@ function sortSize (a, b) {
 }
 
 function sortDate (a, b) {
-  if (a.mtimeMs > b.mtimeMs) return 1;
-  if (b.mtimeMs > a.mtimeMs) return -1;
+  if (a.mtime > b.mtime) return 1;
+  if (b.mtime > a.mtime) return -1;
   return 0
 }
 
@@ -107,7 +107,6 @@ export default class DirectoryListData {
     try {
       const results = (await FileSystem.ls(this._currentDirectory, { withFileTypes: true }))
       entries = results.map(entry => { 
-        entry.birthtimeMs = entry.mtimeMs = entry.mtime
         entry.isDirectory = entry.dir;
         return entry;
       })
