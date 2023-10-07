@@ -35,8 +35,10 @@ const fileExplorerSlice = createSlice({
     },
     // set selected file
     setSelectedFile: (state, { payload }) => {
+      const { entry, entryIndex } = payload
       state.isSelected = true
-      state.selectedFile = payload
+      state.cursorOver = entryIndex
+      state.selectedFile = { entry }
     },
     updateCursorPosition: (state, { payload }) => {
       if (payload.direction === 'UP') {
