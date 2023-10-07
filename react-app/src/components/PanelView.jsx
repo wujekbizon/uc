@@ -6,6 +6,7 @@ import { refreshPanes } from '../state/apiCalls'
 // Components
 import { ViewerDivider, DirectoryListViewer, ViewFileModal } from './index'
 import { useKeyboardEvents } from '../hooks/useKeyboardEvents'
+import { FILE_SORT_MODE_DATE, SORT_DESCENDING } from '../api/DirectoryListData'
 
 const PanelView = () => {
   const { focusedPaneIndex, selectedFile, directoryViewCount, oppositePaneIndex } = useSelector(
@@ -107,7 +108,7 @@ const PanelView = () => {
       {directoryListData?.map((data, index) => {
         return (
           <Fragment key={index}>
-            <DirectoryListViewer data={data} paneIndex={index} />
+            <DirectoryListViewer data={data} paneIndex={index} sortMode={FILE_SORT_MODE_DATE} sortOrder={SORT_DESCENDING} />
             {index !== directoryListData.length - 1 && <ViewerDivider />}
           </Fragment>
         )

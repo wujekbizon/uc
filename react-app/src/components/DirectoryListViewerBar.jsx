@@ -1,22 +1,29 @@
 import './DirectoryListViewerBar.scss'
 import React from 'react'
 
-const DirectoryListViewerBar = () => {
+import { FILE_SORT_MODE_DATE, FILE_SORT_MODE_EXT, FILE_SORT_MODE_NAME, FILE_SORT_MODE_SIZE } from '../api/DirectoryListData'
+
+const DirectoryListViewerBar = ({ setSortMode, setSortOrder }) => {
   const handleNameClick = () => {
-    console.log('Sort by name')
+    setSortMode(FILE_SORT_MODE_NAME)
   }
 
   const handleExtClick = () => {
-    console.log('Sort by ext')
+    setSortMode(FILE_SORT_MODE_EXT)
   }
 
   const handleSizeClick = () => {
-    console.log('Sort by size')
+    setSortMode(FILE_SORT_MODE_SIZE)
   }
 
   const handleDateClick = () => {
-    console.log('Sort by date')
+    setSortMode(FILE_SORT_MODE_DATE)
   }
+
+  // todo(@mribbons): ui for current sort order (up/down arrow)
+  // todo(@mribbons): drive listing and column headers should be in separate components
+  // todo(@mribbons): populate drives/block devices
+  // todo(@mribbons): get device metrics
 
   return (
     <nav className="file_view-bar">

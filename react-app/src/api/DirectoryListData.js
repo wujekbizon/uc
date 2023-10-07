@@ -25,8 +25,6 @@ function sortDirectories (a, b) {
   if (a.isDirectory &&  !b.isDirectory) return -1;
 
   return 1;
-
-  return undefined;
 }
 
 function sortName (a, b) {
