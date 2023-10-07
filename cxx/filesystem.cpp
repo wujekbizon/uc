@@ -18,7 +18,7 @@ namespace rectavalo::filesystem {
 
   template <class Clock>
   uint64_t unixTime(std::chrono::time_point<Clock> tp) {
-    return std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    return std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch()).count();
   }
 
   Json::Value cwd(const Json::Value json) {
