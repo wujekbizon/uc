@@ -38,7 +38,7 @@ const fileExplorerSlice = createSlice({
       const { entry, entryIndex } = payload
       state.isSelected = true
       state.cursorOver[state.focusedPaneIndex] = entryIndex
-      state.selectedFile = { entry }
+      state.selectedFile = entry
     },
     updateCursorPosition: (state, { payload }) => {
       if (payload.direction === 'UP') {

@@ -8,6 +8,7 @@ const std::string NS = "ns";
 const std::string CALLBACK_ID = "callbackId";
 const std::string ARGS = "args";
 const std::string FILE_SYSTEM = "filesystem";
+const std::string IO = "io";
 const std::string CONSOLE_LOG = "console.log";
 
 #ifdef _WIN32

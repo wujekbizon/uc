@@ -4,6 +4,10 @@
 #include <iostream>
 #include <json/json.h>
 
-Json::Value io_readFile(std::vector<Json::Value> args);
+namespace rectavalo::io {
+
+  Json::Value io_onMessage(const std::string fn, const Json::Value json, const std::vector<Json::Value> args);
+  Json::Value readfile(const Json::Value json);
+}
 
 #endif

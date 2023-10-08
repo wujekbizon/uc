@@ -161,7 +161,7 @@ export default class DirectoryListData {
    * @returns {String} - The full path to the file
    */
   fullPath (entry) {
-    return Path.join(this._currentDirectory, entry.name)
+    return Path.join(this._currentDirectory, [entry.name, entry.ext].join(''))
   }
 
   /**
