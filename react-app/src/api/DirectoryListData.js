@@ -170,7 +170,10 @@ export default class DirectoryListData {
    * @returns {Promise<Buffer>} Buffer containing file data
    */
   async getContents (entry) {
-    return FileSystem.readFile(this.fullPath(entry))
+    if (!entry.isDirectory && entry !== '..')
+      return FileSystem.readFile(this.fullPath(entry))
+    else
+      return ''
   }
 
   static async exists(path) {
