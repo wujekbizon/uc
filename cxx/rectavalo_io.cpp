@@ -1,26 +1,42 @@
 #include <fstream>
 #include <sstream>
 #include <filesystem>
+#include "rectavalo.hpp"
 #include <rectavalo_io.hpp>
 
-Json::Value io_readFile(std::vector<Json::Value> args) {
-  Json::Value response;
+const std::string READ_FILE = "readfile";
 
-  const std::string fname = args[0].asString();
+namespace rectavalo::io {
+  Json::Value io_onMessage(const std::string fn, const Json::Value json, const std::vector<Json::Value> args) {
+    if (fn == READ_FILE) {
+      return readfile(json);
+    } else {
+      return unknownRequest(fn);
+    }
+  }
 
-  if (!std::filesystem::exists(fname)) {
-    response["error"] = "No such file.";
+  Json::Value readfile(const Json::Value json) {
+    Json::Value response;
+    validateArg(json, response, "path", Json::stringValue);
+    if (hasError(response)) return response;
+    auto path = json["path"].asString();
+
+    if (!std::filesystem::exists(path)) {
+      response["error"] = "No such file.";
+      return response;
+    }
+    std::ifstream input(path);
+    if (input) {
+      std::ostringstream  stream;
+      stream << input.rdbuf();
+      for (auto c : stream.str()) {
+        response["result"].append((int)c);
+      }
+    } else {
+      response["error"] = "Read failed.";
+    }
+
     return response;
   }
 
-  std::ifstream input(fname);
-  if (input) {
-    std::ostringstream  stream;
-    stream << input.rdbuf();
-    response["data"] = stream.str();
-  } else {
-    response["error"] = "Read failed.";
-  }
-
-  return response;
 }

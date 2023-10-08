@@ -1,4 +1,4 @@
-import { nativeCallx1Param } from "./RectavaloWeb"
+import { nativeCallx1Param, log } from "./RectavaloWeb"
 
 const FileSystem = {
   cwd: async () => { 
@@ -12,7 +12,7 @@ const FileSystem = {
     return result.result
   },
   ls: async (path) => {
-    let result = await nativeCallx1Param({
+    const result = await nativeCallx1Param({
       fn: "listdir",
       ns: "filesystem",
       path
@@ -24,7 +24,24 @@ const FileSystem = {
     return result.result
   },
   stat: () => { return {} },
-  readFile: () => { return "todo" },
+  readFile: async (path) => {
+    const result = await nativeCallx1Param({
+      fn: "readfile",
+      ns: "io",
+      path
+    })
+
+    if (result.error)
+      throw new Error(result.error)
+
+    const data_array = []
+
+    for (const char of result.result) {
+      data_array.push(String.fromCharCode(char))
+    }
+
+    return data_array.join('')
+  },
   writeFile: () => {  },
   rename: () => { },
   rm: () => {},

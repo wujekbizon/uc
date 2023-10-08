@@ -204,8 +204,9 @@ std::string onMessage(const Json::Value json) {
   // todo: namespace / onMessage map
   if (ns == FILE_SYSTEM) {
     response = rectavalo::filesystem::filesystem_onMessage(fn, json, args);
-  }
-  else {
+  } else if (ns == IO) {
+    response = rectavalo::io::io_onMessage(fn, json, args);
+  }  else {
     if (fn == "nativeHello") {
       response["nativeResult"] = hello();
     }
@@ -214,7 +215,7 @@ std::string onMessage(const Json::Value json) {
       response["result"] = console_log(args);
     }
     else if (fn == "io.readFile") {
-      response = io_readFile(args);
+      response["error"] = "io.readFile moved.";
     }
     else {
       response = unknownRequest(fn);

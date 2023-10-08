@@ -5,13 +5,13 @@ MVP todo
 - [ ] delete, 
 
 
-- [ ] fix dir click hang: async stat lookup
+- [x] fix dir click hang: async stat lookup
 - [x] fix dir view: need scroll bar
 - [x] Maybe include view files
-- [ ] Mobile Layout
-- [ ] mouse wheel - always scrolls left side
-- [ ] Extended file details
-- [ ] Click column headers to sort
+- [x] Mobile Layout
+- [x] mouse wheel - always scrolls left side
+- [x] Extended file details
+- [x] Click column headers to sort
 - [ ] Menus - Indicate that items aren't implemented yet, maybe just display a modal on action
 
 Search - Maybe after mvp
