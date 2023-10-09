@@ -137,6 +137,10 @@ bool hasError(Json::Value response) {
   return response["error"].size() > 0;
 }
 
+bool hasArg(const Json::Value json, const std::string name, Json::ValueType type) {
+  return json[name].type() == type;
+}
+
 bool validateArg(const Json::Value json, Json::Value& response, const std::string name, Json::ValueType type) {
   if (json[name].type() == type) {
     return true;
