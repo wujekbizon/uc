@@ -24,7 +24,8 @@ Json::Value jsonOk();
 
 Json::Value unknownRequest(std::string fn);
 bool hasError(Json::Value response);
-bool validateArg(const Json::Value json, Json::Value& response, const std::string name, Json::ValueType type);
+bool hasArg      (const Json::Value json, const std::string name, Json::ValueType type);
+bool validateArg (const Json::Value json, Json::Value& response, const std::string name, Json::ValueType type);
 std::string onMessage(const std::string& json);
 std::wstring onMessage(const std::wstring& json);
 std::string json_stringify(const Json::Value json);

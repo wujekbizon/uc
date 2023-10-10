@@ -21,20 +21,35 @@ namespace rectavalo::io {
     if (hasError(response)) return response;
     auto path = json["path"].asString();
 
+    auto offset = hasArg(json, "offset", Json::intValue) ? json["offset"].asInt() : 0;
+    auto bufferLength = hasArg(json, "bufferLength", Json::intValue) ? json["bufferLength"].asInt() : 65535;
+
     if (!std::filesystem::exists(path)) {
       response["error"] = "No such file.";
       return response;
     }
+
+    char* buffer = new char [bufferLength];
+
     std::ifstream input(path);
+    if (offset == 0) {
+      input.seekg(0, input.end);
+      response["size"] = (uint64_t)input.tellg();
+    }
+    
+    input.seekg(offset, input.beg);
+
     if (input) {
-      std::ostringstream  stream;
-      stream << input.rdbuf();
-      for (auto c : stream.str()) {
-        response["result"].append((int)c);
+      input.read(buffer, bufferLength);
+      auto bytes = input ? bufferLength : input.gcount();
+      for (int x = 0; x < bytes; x++) {
+        response["result"].append((int)buffer[x]);
       }
     } else {
       response["error"] = "Read failed.";
     }
+
+    delete[] buffer;
 
     return response;
   }

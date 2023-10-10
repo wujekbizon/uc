@@ -169,11 +169,11 @@ export default class DirectoryListData {
    * @param {any} entry - file entry supplied from this instance
    * @returns {Promise<Buffer>} Buffer containing file data
    */
-  async getContents (entry) {
-    if (!entry.isDirectory && entry !== '..')
-      return FileSystem.readFile(this.fullPath(entry))
-    else
-      return ''
+  async getContents (entry, offset) {
+    if (!entry.isDirectory && entry !== '..') {
+      return FileSystem.readFileBuffered(this.fullPath(entry), offset, 4096)
+    } else 
+      return { error: 'entry is a directory.' }
   }
 
   static async exists(path) {

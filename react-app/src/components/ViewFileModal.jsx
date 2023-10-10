@@ -3,20 +3,35 @@ import React, { useEffect, useState } from 'react'
 import { MdOutlineClose } from 'react-icons/md'
 import { useSelector } from 'react-redux'
 import { useActions } from '../hooks/useActions'
+import { log } from '../rectavalo/RectavaloWeb'
 
 const ViewFileModal = ({ viewData }) => {
   const { selectedFile } = useSelector((state) => state.fileExplorers)
   const [contents, setContents] = useState('')
   const { closeViewFileModal } = useActions()
+  const [size, setSize] = useState(0)
 
   useEffect(() => {
-    /* todo - This is slow on large files. Buffer data. 
-    Need to determine max width and height so scrollbars can be set properly without displaying entire file
-    */
-    viewData.getContents(selectedFile).then((buffer) => {
-      setContents(buffer.toString())
+    // todo(@mribbons): buffering is working, but we should only read what is viewed + some lookahead
+    viewData.getContents(selectedFile, 0).then((result) => {
+      if (result.error) {
+        setSize(0)
+        setContents(result.error)
+      } else {
+        setSize(result.size)
+        setContents(result.buffer)
+      }
     })
   }, [selectedFile, viewData])
+
+  useEffect(() => {
+    if (size === 0 || contents.length === size)
+      return;
+
+    viewData.getContents(selectedFile, contents.length).then((result) => {
+      setContents(contents + result.buffer)
+    })
+  }, [contents, size, viewData])
 
   const onClickHandle = () => {
     closeViewFileModal()
