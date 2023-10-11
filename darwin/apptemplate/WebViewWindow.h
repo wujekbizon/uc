@@ -8,6 +8,7 @@
 
 @interface WebViewWindow : NSWindow
 
+- (BOOL) applicationShouldTerminateAfterLastWindowClosed: (NSApplication *) app;
 - (void)setup;                                      
 
 @end

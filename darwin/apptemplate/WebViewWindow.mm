@@ -11,13 +11,17 @@
 #include <string>
 #include <filesystem>
 
-@interface WebViewWindow () <WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler>
+@interface WebViewWindow () <WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler, NSApplicationDelegate>
 @property (nonatomic) WKWebView *webView;
 @end
 
 static NSString *RequestURL = @"";
 
 @implementation WebViewWindow
+
+- (BOOL) applicationShouldTerminateAfterLastWindowClosed: (NSApplication *) app {
+    return TRUE;
+}
 
 - (void)setup {
     [self setupWebView];
@@ -32,6 +36,7 @@ static NSString *RequestURL = @"";
     ];
 
     [self setURL: RequestURL];
+    [NSApp setDelegate: self];
 }
 
 - (void)setupWebView {
