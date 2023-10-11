@@ -30,6 +30,10 @@ const modalsSlice = createSlice({
     openViewFileModal(state) {
       state.isViewFileModalOpen = true
     },
+    closeActiveModal(state) {
+      if (state.isViewFileModalOpen)
+        state.isViewFileModalOpen = false
+    },
     closeViewFileModal(state) {
       state.isViewFileModalOpen = false
     },
@@ -45,6 +49,7 @@ const modalsSlice = createSlice({
 export const {
   openSubMenu,
   closeSubMenu,
+  closeActiveModal,
   openViewFileModal,
   closeViewFileModal,
   openSettingsModal,
