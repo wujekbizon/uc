@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { log } from '../../rectavalo/RectavaloWeb'
 
 const initialState = {
   focusedPaneIndex: 0,
@@ -7,7 +8,8 @@ const initialState = {
   isSelected: false,
   isFocused: [true, false],
   directoryViewCount: 2,
-  cursorOver: [0, 0],
+  cursorOver: [0, 0],  
+  lastSelectedEntry: [null, null],
   entries: ['[..]'],
 }
 
@@ -26,6 +28,7 @@ const fileExplorerSlice = createSlice({
       state.isFocused[payload] = true
       // set the focused pane index
       state.focusedPaneIndex = payload
+      state.selectedFile = state.lastSelectedEntry[state.focusedPaneIndex] ?? state.selectedFile
     },
     setFocus: (state, { payload }) => {
       state.focusedPaneIndex = payload
@@ -38,7 +41,9 @@ const fileExplorerSlice = createSlice({
       const { entry, entryIndex } = payload
       state.isSelected = true
       state.cursorOver[state.focusedPaneIndex] = entryIndex
-      state.selectedFile = entry
+      state.lastSelectedEntry[state.focusedPaneIndex] = 
+        state.selectedFile = 
+        entry
     },
     updateCursorPosition: (state, { payload }) => {
       if (payload.direction === 'UP') {
@@ -47,6 +52,10 @@ const fileExplorerSlice = createSlice({
       if (payload.direction === 'DOWN') {
         state.cursorOver[state.focusedPaneIndex] = Math.min(state.cursorOver[state.focusedPaneIndex] + 1, payload.entries.length - 1)
       }
+      state.lastSelectedEntry[state.focusedPaneIndex] = 
+        state.selectedFile = 
+        payload.entries[state.cursorOver[state.focusedPaneIndex]]
+
     },
     updateScrollCursorPosition: (state, { payload }) => {
       state.cursorOver[state.focusedPaneIndex] = Math.max(Math.min(state.cursorOver[state.focusedPaneIndex] + payload.cursorDelta, payload.entries.length - 1), 0)
