@@ -8,6 +8,6 @@
 
 @interface WebViewWindow : NSWindow
 
-- (void)setup;
+- (void)setup;                                      
 
 @end
