@@ -6,12 +6,13 @@ import { useActions } from '../hooks/useActions'
 import { log } from '../rectavalo/RectavaloWeb'
 
 const ViewFileModal = ({ viewData }) => {
-  const { selectedFile } = useSelector((state) => state.fileExplorers)
+  const { selectedFile, focusedPaneIndex, directoryViewCount } = useSelector((state) => state.fileExplorers)
   const [contents, setContents] = useState('')
   const { closeViewFileModal } = useActions()
   const [size, setSize] = useState(0)
   const mainViewRef = useRef(null)
   const [viewPercentage, setViewPercentage] = useState(100)
+  const [ panelHPos, setPanelHPos ] = useState("0%")
 
   useEffect(() => {
     // todo(@mribbons): buffering is working, but we should only read what is viewed + some lookahead
@@ -27,6 +28,13 @@ const ViewFileModal = ({ viewData }) => {
       }
     })
   }, [selectedFile, viewData])
+
+  useEffect(() => {
+    const otherPanelIndex = (focusedPaneIndex + 1) % directoryViewCount
+    const pos = `${Math.round(otherPanelIndex * 100/directoryViewCount)}%`
+    setPanelHPos(pos)
+
+  }, [focusedPaneIndex, directoryViewCount])
 
   useEffect(() => {
     if (size === 0 || contents.length === size)
@@ -51,7 +59,7 @@ const ViewFileModal = ({ viewData }) => {
   }
 
   return (
-    <aside className="view-file_modal">
+    <aside className="view-file_modal" style={{left:panelHPos}} >
       <header className="view-file_header">
         <div className="view-file_title">
           <h4>
