@@ -3,6 +3,7 @@ import {
   modalsReducer,
   openSubMenu,
   closeSubMenu,
+  closeActiveModal,
   openViewFileModal,
   closeViewFileModal,
   openSettingsModal,
@@ -43,6 +44,7 @@ export const store = configureStore({
 export const actionCreators = {
   openSubMenu,
   closeSubMenu,
+  closeActiveModal,
   openViewFileModal,
   closeViewFileModal,
   openSettingsModal,

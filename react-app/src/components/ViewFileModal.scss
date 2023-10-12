@@ -1,7 +1,6 @@
 .view-file_modal {
   position: absolute;
   top: 0;
-  left: 0;
   width: 50%;
   height: 100vh;
   background: rgba(0, 0, 0, 0.9);
@@ -84,5 +83,9 @@
       border: 1px solid #292d3e;
       background: linear-gradient(189.97deg, #ae67fa 1.84%, #f49867 102.67%);
     }
+  }
+
+  pre {
+    white-space: pre-wrap;
   }
 }

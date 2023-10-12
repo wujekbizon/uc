@@ -26,7 +26,7 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
   // re-renders caused by passing new functions down to child components on each render.
   const onEntryAction = useCallback(
     (entry) => {
-      setFocus(paneIndex)
+      setFocus(paneIndex, entry, entryIndex)
       setSelectedFile({entry, entryIndex})
     },
     [setSelectedFile]

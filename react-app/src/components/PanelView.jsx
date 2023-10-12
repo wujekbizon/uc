@@ -15,7 +15,7 @@ const PanelView = () => {
   const { currentWorkingDirectory  } = useSelector((state) => state.platforms)
   const { directoryListData } = useSelector((state) => state.directoryListsData)
   const { isViewFileModalOpen } = useSelector((state) => state.modals)
-  const { openViewFileModal, toggleFocus, fetchDirectoryList, getOppositePaneIndex, resetCursorPosition } = useActions()
+  const { closeActiveModal, openViewFileModal, toggleFocus, fetchDirectoryList, getOppositePaneIndex, resetCursorPosition } = useActions()
 
   // effects
   useEffect(() => {
@@ -91,6 +91,7 @@ const PanelView = () => {
 
   const keyHandlers = {
     Tab: togglePanes,
+    Escape: closeActiveModal,
     F3: openViewFileModal,
     F4: unhandledKey,
     F5: copyFile,

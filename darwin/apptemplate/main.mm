@@ -9,34 +9,38 @@
 #include "WebViewWindow.h"
 #import <WebKit/WebKit.h>
 
-void setup() {
+WebViewWindow* setupWebViewWindow() {
     WebViewWindow  *myWindow;      // typed pointer to NSWindow object
     NSRect    graphicsRect;  // contains an origin, width, height
 
     // initialize the rectangle variable
-    graphicsRect = NSMakeRect(100.0, 350.0, 1280, 720);
+    graphicsRect = NSMakeRect(200.0, 350.0, 1280, 720);
 
-    myWindow = [ [WebViewWindow alloc]              // create the window
-               initWithContentRect: graphicsRect
-                 styleMask:NSWindowStyleMaskTitled
-                 |NSWindowStyleMaskClosable
-                 |NSWindowStyleMaskMiniaturizable
-                           backing:NSBackingStoreBuffered
-                             defer:NO ];
+    myWindow = [[WebViewWindow alloc]
+      initWithContentRect: graphicsRect
+      styleMask:NSWindowStyleMaskTitled
+      |NSWindowStyleMaskClosable
+      |NSWindowStyleMaskMiniaturizable
+      backing:NSBackingStoreBuffered
+      defer:NO ];
 
-    [myWindow setTitle:@"Web View App"];
-    [myWindow makeKeyAndOrderFront: nil];
-    [myWindow orderFrontRegardless];
+    [[NSApp mainWindow] makeKeyWindow];
     [myWindow setup];
-    [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+    return myWindow;
 }
 
-int main(int argc, const char * argv[]) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    NSApp = [NSApplication sharedApplication];
-    setup();
+int main() {
+  // https://stackoverflow.com/questions/30269329/creating-a-windowed-application-in-pure-c-on-macos
+  @autoreleasepool{
+    [NSApplication sharedApplication];
+    [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+    id applicationName = [[NSProcessInfo processInfo] processName];
+    id window = setupWebViewWindow();
+    [window cascadeTopLeftFromPoint:NSMakePoint(200,100)];
+    [window setTitle: applicationName];
+    [window makeKeyAndOrderFront:nil];
+    [NSApp activateIgnoringOtherApps:YES];
     [NSApp run];
-    [NSApp release];      // release the app 
-    [pool release];       // release the pool
-    return(EXIT_SUCCESS);
+  }
+  return 0;
 }
