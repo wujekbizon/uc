@@ -13,6 +13,20 @@ const initialState = {
   entries: ['[..]'],
 }
 
+/**
+ * calling actions from other actions doesn't seem to work, make this a separate function that can be called as by both setSelectedFile and setCursorPosition
+ * @param {*} state 
+ * @param {*} param1 
+ */
+const _setSelectedFile = (state, { payload }) => {
+  const { entry, entryIndex } = payload
+  state.isSelected = true
+  state.cursorOver[state.focusedPaneIndex] = entryIndex
+  state.lastSelectedEntry[state.focusedPaneIndex] = 
+    state.selectedFile = 
+    entry
+}
+
 const fileExplorerSlice = createSlice({
   name: 'fileExplorer',
   initialState,
@@ -38,12 +52,15 @@ const fileExplorerSlice = createSlice({
     },
     // set selected file
     setSelectedFile: (state, { payload }) => {
-      const { entry, entryIndex } = payload
-      state.isSelected = true
-      state.cursorOver[state.focusedPaneIndex] = entryIndex
-      state.lastSelectedEntry[state.focusedPaneIndex] = 
-        state.selectedFile = 
-        entry
+      _setSelectedFile(state, {payload})
+    },
+    setCursorPosition: (state, { payload }) => {
+      const { entryIndex, paneIndex } = payload
+      if (paneIndex === state.focusedPaneIndex) {
+        _setSelectedFile(state, { payload: {entryIndex, entry: payload.entries[entryIndex] }})
+      } else {
+        state.cursorOver[paneIndex] = entryIndex
+      }
     },
     updateCursorPosition: (state, { payload }) => {
       if (payload.direction === 'UP') {
@@ -69,6 +86,7 @@ const fileExplorerSlice = createSlice({
 export const {
   toggleFocus,
   setSelectedFile,
+  setCursorPosition,
   setFocus,
   setEntries,
   updateCursorPosition,

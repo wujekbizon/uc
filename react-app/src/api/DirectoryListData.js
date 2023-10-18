@@ -62,8 +62,39 @@ export default class DirectoryListData {
     this.currentDirectory = initialDirectory
     this._entries = []
     this._selectedEntries = []
+    this._nextBasename = undefined
     this.sortDirection = SORT_ASCENDING
     this.sortMode = FILE_SORT_MODE_NAME
+  }
+
+  entryIndexOfBasename(basename) {
+    if (basename === '..')
+      return 0
+    else
+      return this._entries.findIndex(entry => {return entry.name === basename}) + 1
+  }
+
+  /**
+   * nextCursorIndex - Returns the next cursor index which can be set via `nextBasename`
+   * @param {Int} currentIndex 
+   * @returns {Int} the index of nextBasename, or currentIndex if undefined
+   */
+  nextCursorIndex(currentIndex) {
+    const basename = this._nextBasename
+    this._nextBasename = undefined
+    if (basename === undefined)
+      return currentIndex
+
+    // todo(@mribbons) - index could be determined at refresh time
+    return this.entryIndexOfBasename(basename)
+  }
+
+  /**
+   * nextBasename
+   * @param {string} value - Set the basename of the item to be used on the next render
+   */
+  set nextBasename(value) {
+    this._nextBasename = value
   }
 
   get currentDirectory() { return this._currentDirectory }

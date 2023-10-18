@@ -53,7 +53,7 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
   const handleKeyDown = (event) => {
     if (event.key === 'Enter' && entry.isDirectory) {
       event.preventDefault()
-      onEntryAction(paneIndex, entry)
+      onEntryDoubleClickAction(paneIndex, entry)
     }
   }
 
@@ -65,8 +65,6 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
       {entry === '..' && (
         <div
           className={`file-container ${cursor_over ? 'file-cursor-over' : ''}`}
-          tabIndex={0}
-          onKeyDown={handleKeyDown}
           onClick={handleClick}
           onDoubleClick={handleDoubleClick}
         >
@@ -77,7 +75,6 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
         <div
           className={`file-container ${cursor_over ? 'file-cursor-over' : ''}`}
           tabIndex={0}
-          onKeyDown={handleKeyDown}
           onClick={handleClick}
           onDoubleClick={handleDoubleClick}
         >
@@ -93,7 +90,6 @@ const DirectoryEntry = React.memo(({ paneIndex, entry, entryIndex }) => {
         <div
           className={`file-container ${cursor_over ? 'file-cursor-over' : ''}`}
           tabIndex={0}
-          onKeyDown={handleKeyDown}
           onClick={handleClick}
         >
           <div className="name-container">
