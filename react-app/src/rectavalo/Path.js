@@ -16,6 +16,27 @@ const join = (...args) => {
   return removeTrailingSlash(path)
 }
 
+const basename = (path) => {
+  // todo - win32 - check for 
+  const rSlash = path.lastIndexOf(sep)
+  // *nix - top level /
+  if (rSlash === 0 && sys.platform() !== 'win32')
+    return ''
+
+  // win32 - a:\
+  if (rSlash === 2 && path[1] === ':' && sys.platform() === 'win32')
+    return ''
+
+  // win32 - \\ (unc root)
+  if (rSlash === 1 && path[0] === sep && sys.platform() === 'win32')
+    return ''
+
+  if (rSlash === -1)
+    return ''
+
+  return path.substring(rSlash+1)
+}
+
 const dirname = (path) => {
   // todo - win32 - check for 
   const rSlash = path.lastIndexOf(sep)
@@ -40,6 +61,7 @@ const dirname = (path) => {
 const Path = {
   join,
   dirname,
+  basename,
   removeTrailingSlash,
   sep
 }

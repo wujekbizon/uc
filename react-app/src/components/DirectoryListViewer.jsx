@@ -4,6 +4,9 @@ import React, { useEffect, useState } from 'react'
 // custom hooks
 import { useSmoothScroll } from '../hooks/useSmoothScroll'
 import { useCursorHandlers } from '../hooks/useCursorHandlers'
+import { useSelector } from 'react-redux'
+import { useActions } from '../hooks/useActions'
+
 
 // Components
 import { DirectoryListViewerBar, DirectoryEntry } from './index'
@@ -16,7 +19,10 @@ import { FILE_SORT_MODE_DATE, SORT_ASCENDING, SORT_DESCENDING } from '../api/Dir
  */
 
 const DirectoryListViewer = ({ data, paneIndex, initSortMode, initSortOrder }) => {
+  const { cursorOver } = useSelector((state) => state.fileExplorers)
+  const { setCursorPosition } = useActions()
   const { selectRef, debouncedScroll } = useSmoothScroll('.file-cursor-over', 20)
+
   const [entries, setEntries] = useState(['[..]'])
   const [sortMode, setSortMode] = useState(initSortMode)
   const [sortOrder, setSortOrder] = useState(initSortOrder)
@@ -38,7 +44,10 @@ const DirectoryListViewer = ({ data, paneIndex, initSortMode, initSortOrder }) =
 
   useEffect(() => {
     data.refresh(sortMode, sortOrder).then(() => {
-      setEntries(['..', ...data._entries])
+      const newEntries = ['..', ...data._entries]
+      setEntries(newEntries)
+      const nextIndex = data.nextCursorIndex(entries.length > 1 ? cursorOver[paneIndex] : 0)
+      setCursorPosition({entryIndex: nextIndex, paneIndex, entries: newEntries })
     })
   }, [data, sortMode, sortOrder])
 
