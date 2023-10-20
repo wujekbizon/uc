@@ -36,7 +36,10 @@ static NSString *RequestURL = @"";
     ];
 
     [self setURL: RequestURL];
+    #ifndef DEBUG
+    // Don't set it debug mode (normally stops process from hanging, but right click causes crash in webview) 
     [NSApp setDelegate: self];
+    #endif
 }
 
 - (void)setupWebView {

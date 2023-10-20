@@ -36,6 +36,9 @@ int main() {
     [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
     id applicationName = [[NSProcessInfo processInfo] processName];
     id window = setupWebViewWindow();
+    #ifdef DEBUG
+    NSLog(@"This is a DEBUG build, process won't exit on close window.");
+    #endif
     [window cascadeTopLeftFromPoint:NSMakePoint(200,100)];
     [window setTitle: applicationName];
     [window makeKeyAndOrderFront:nil];
